@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const checkAuthButton = document.getElementById('checkAuthButton');
   const loginButton = document.getElementById('loginButton');
-  const readPageButton = document.getElementById('readPage');
+  const dashboardButton = document.getElementById('dashboardButton');
+  const actionSelect = document.getElementById('actionSelect');
+  const actionButton = document.getElementById('actionButton');
   const loginStatus = document.getElementById('loginStatus');
   const output = document.getElementById('output');
 
-  const API_URL = 'http://localhost:3000';
+  const API_URL = 'https://trackjobs.online';
 
   function safelySetTextContent(element, text) {
     if (element) {
@@ -21,57 +24,83 @@ document.addEventListener('DOMContentLoaded', () => {
         safelySetTextContent(loginStatus, 'Error checking login status');
         return;
       }
-
+  
       if (response?.isAuthenticated) {
         safelySetTextContent(loginStatus, 'Logged in');
-        if (loginButton) loginButton.textContent = 'Logout';
-        if (readPageButton) readPageButton.disabled = false;
+        loginButton.textContent = 'Logout';
+        dashboardButton.style.display = 'block';
+        actionSelect.disabled = false;
       } else {
         safelySetTextContent(loginStatus, 'Not logged in');
-        if (loginButton) loginButton.textContent = 'Login';
-        if (readPageButton) readPageButton.disabled = true;
+        loginButton.textContent = 'Login';
+        dashboardButton.style.display = 'none';
+        actionSelect.disabled = true;
       }
+    });
+  
+    // Send a request to the server to check auth status
+    fetch(`${API_URL}/api/check-auth`, {
+      method: 'GET',
+      credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.isAuthenticated) {
+        chrome.storage.local.set({ userInfo: { isAuthenticated: true } });
+      } else {
+        chrome.storage.local.set({ userInfo: null });
+      }
+    })
+    .catch(error => {
+      console.error('Error checking auth status:', error);
     });
   }
 
   checkAuthStatus();
 
-  if (loginButton) {
-    loginButton.addEventListener('click', () => {
-      const action = loginButton.textContent === 'Login' ? 'sign-in' : 'sign-out';
-      chrome.tabs.create({url: `${API_URL}/${action}`});
-    });
-  }
+  checkAuthButton.addEventListener('click', checkAuthStatus);
 
-  if (readPageButton) {
-    readPageButton.addEventListener('click', () => {
-      chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+  loginButton.addEventListener('click', () => {
+    const action = loginButton.textContent === 'Login' ? 'sign-in' : 'api/sign-out';
+    chrome.tabs.create({url: `${API_URL}/${action}`});
+  });
+
+  dashboardButton.addEventListener('click', () => {
+    chrome.tabs.create({url: `${API_URL}/dashboard`});
+  });
+
+  actionSelect.addEventListener('change', () => {
+    actionButton.disabled = !actionSelect.value;
+  });
+
+  actionButton.addEventListener('click', () => {
+    const action = actionSelect.value;
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+      if (chrome.runtime.lastError) {
+        console.error('Error querying tabs:', chrome.runtime.lastError);
+        safelySetTextContent(output, `Error: ${chrome.runtime.lastError.message}`);
+        return;
+      }
+
+      chrome.scripting.executeScript({
+        target: {tabId: tabs[0].id},
+        function: getPageContent
+      }, (results) => {
         if (chrome.runtime.lastError) {
-          console.error('Error querying tabs:', chrome.runtime.lastError);
+          console.error('Error executing script:', chrome.runtime.lastError);
           safelySetTextContent(output, `Error: ${chrome.runtime.lastError.message}`);
-          return;
+        } else if (results?.[0]?.result) {
+          const pageContent = results[0].result;
+          const pageUrl = tabs[0].url;
+          sendJobData(pageContent, pageUrl, action);
+        } else {
+          safelySetTextContent(output, 'No content retrieved.');
         }
-
-        chrome.scripting.executeScript({
-          target: {tabId: tabs[0].id},
-          function: getPageContent
-        }, (results) => {
-          if (chrome.runtime.lastError) {
-            console.error('Error executing script:', chrome.runtime.lastError);
-            safelySetTextContent(output, `Error: ${chrome.runtime.lastError.message}`);
-          } else if (results?.[0]?.result) {
-            const pageContent = results[0].result;
-            const pageUrl = tabs[0].url;
-            sendJobData(pageContent, pageUrl);
-          } else {
-            safelySetTextContent(output, 'No content retrieved.');
-          }
-        });
       });
     });
-  }
+  });
 
-  function sendJobData(content, url) {
+  function sendJobData(content, url, action) {
     chrome.runtime.sendMessage({action: 'checkAuth'}, (response) => {
       if (response?.isAuthenticated) {
         fetch(`${API_URL}/api/jobs`, {
@@ -79,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ content, url, jobStatus: "Saved" }),
+          body: JSON.stringify({ content, url, jobStatus: action }),
           credentials: 'include',
         })
         .then(response => response.json())

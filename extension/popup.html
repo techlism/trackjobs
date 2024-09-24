@@ -1,14 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Job Application Tracker</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrackJobs</title>
+  <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <h1>Job Application Tracker</h1>
-  <button id="loginButton">Login</button>
-  <p id="loginStatus">Checking login status...</p>
-  <button id="readPage" disabled>Read Page Content</button>
-  <div id="output"></div>
+  <div class="container">
+    <header>
+      <img src="trackjobs_logo_48.png" alt="TrackJobs Logo" class="logo">
+      <h1>trackJobs</h1>
+    </header>
+    <main>
+      <button id="checkAuthButton" class="btn btn-primary">Check Auth Status</button>
+      <p id="loginStatus">Checking login status...</p>
+      <button id="loginButton" class="btn btn-secondary">Login</button>
+      <button id="dashboardButton" class="btn btn-primary">Dashboard</button>
+      <div class="select-wrapper">
+        <select id="actionSelect" class="select">
+          <option value="">Select Status</option>
+          <option value="Saved">Saved</option>
+          <option value="Applied">Applied</option>
+          <option value="OA/Assignment">OA/Assignment</option>
+          <option value="Interview">Interview</option>
+          <option value="Offer">Offer</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Withdrawn">Withdrawn</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <button id="actionButton" class="btn btn-primary" disabled>Track Job</button>
+      <div id="output" class="output"></div>
+    </main>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>

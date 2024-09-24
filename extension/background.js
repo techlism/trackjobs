@@ -11,7 +11,7 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
 });
 
 function checkAuthStatus() {
-  fetch('http://localhost:3000/api/check-auth', {
+  fetch('https://trackjobs.online/api/check-auth', {
     method: 'GET',
     credentials: 'include'
   })

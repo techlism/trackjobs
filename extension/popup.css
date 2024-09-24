@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+:root {
+  --primary-color: #5d17ea;
+  --secondary-color: #f0ebfe;
+  --text-color: #333;
+  --background-color: #ffffff;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.container {
+  width: 200px;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+h1 {
+  font-size: 20px;
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  margin-bottom: 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #4a12c0;
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+  background-color: #e0d6fd;
+}
+
+.select-wrapper {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.select {
+  width: 100%;
+  padding: 8px 16px;
+  font-size: 14px;
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  appearance: none;
+  background-color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+.select > option {
+  font-weight: 600;
+}
+
+.select-wrapper::after {
+  content: '\25BC';
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--primary-color);
+}
+
+.output {
+  margin-top: 16px;
+  padding: 8px;
+  background-color: var(--secondary-color);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#loginStatus {
+  margin-bottom: 8px;
+  font-style: italic;
+}

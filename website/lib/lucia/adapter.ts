@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle"
 import db from "../database/client";
 // import { sessionTable, userTable } from "../database/schema";
@@ -16,6 +18,8 @@ const sessionTable = sqliteTable("session", {
 });
 
 // The error is not causing any issues for now, but it there due to some type mismatch in sessionTable.
+
+// @ts-expect-error: Ignoring type mismatch for now
 const adapter = new DrizzleSQLiteAdapter(db, sessionTable, userTable);
 
 export default adapter;
