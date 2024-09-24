@@ -5,7 +5,7 @@ import db from "@/lib/database/client"
 import { emailVerificationTable, sessionTable, userTable } from "@/lib/database/schema"
 import { eq } from "drizzle-orm"
 import * as argon2 from "argon2"
-import { sendEmail } from "@/lib/email"
+import { generateEmailHTML, sendEmail } from "@/lib/email"
 import { lucia } from "@/lib/lucia"
 import { cookies } from "next/headers"
 
@@ -19,6 +19,13 @@ type ActionResponse = {
 // Function to generate OTP
 const generateOTP = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+async function userEntryExists(email: string): Promise<boolean> {
+    const existingUser = await db.query.userTable.findFirst({
+        where: (table) => eq(table.email, email),
+    })
+    return !!existingUser;
 }
 
 /**
@@ -71,7 +78,7 @@ export const resendVerificationEmail = async (userId: string): Promise<ActionRes
             .where(eq(emailVerificationTable.userId, existingUser.id))
 
         await sendEmail({
-            html: `Your verification code is: ${otp}`,
+            html:generateEmailHTML(otp),
             subject: "Verify your email",
             to: existingUser.email,
         })
@@ -103,7 +110,7 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>): Promise<Acti
         const hashedPassword = await argon2.hash(values.password)
         const userId = crypto.randomUUID();
 
-        const userExists = await userExistsWithoutEmailVerified(values.email);
+        const userExists = await userEntryExists(values.email);
         if (!userExists) {
             await db.insert(userTable).values({
                 id: userId,
@@ -116,10 +123,17 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>): Promise<Acti
         }
         else{
         const userDetails = await db.query.userTable.findFirst({ where: (table) => eq(table.email, values.email) });
-            if (userDetails) {
+            if (userDetails && userDetails.isEmailVerified === false) {
                 return {
                     success: false,
                     message: "User already exists. Please verify your email .",
+                    data: { userId: userDetails.id }
+                }
+            }
+            else if(userDetails && userDetails.isEmailVerified === true){
+                return {
+                    success: false,
+                    message: "User already exists. Please login.",
                     data: { userId: userDetails.id }
                 }
             }
@@ -127,24 +141,32 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>): Promise<Acti
 
         const otp = generateOTP()
 
-        await db.insert(emailVerificationTable).values({
-            code: otp,    
-            id: crypto.randomUUID(),
-            userId,
-            sentAt: new Date(),
-        })
 
-        await sendEmail({
-            html: `Your verification code is: ${otp}`,
-            subject: "Verify your email",
+        const emailResponse = await sendEmail({
+            html:generateEmailHTML(otp),
+            subject: `Your verification code is ${otp}`,
             to: values.email,
         })
 
-        return {
-            success: true,
-            message: "You will receive an email with an OTP to verify your email. Please verify your email to complete the sign-up process.",
-            data: { userId }
+        if(emailResponse.messageId){
+            await db.insert(emailVerificationTable).values({
+                code: otp,    
+                id: crypto.randomUUID(),
+                userId,
+                sentAt: new Date(),
+            })
+            return {
+                success: true,
+                message: "You will receive an email with an OTP to verify your email. Please verify your email to complete the sign-up process.",
+                data: { userId }
+            }
         }
+        else{
+            return {
+                success: false,
+                message: "An error occurred while sending the verification email. Please try again."
+            }
+        }        
     } catch (error) {
         console.error("Error in signUp:", error)
         return { success: false, message: "An error occurred during the sign-up process" }
@@ -208,18 +230,11 @@ export const verifyOTPForSignup = async (userId: string, otp: string): Promise<A
             .where(eq(emailVerificationTable.userId, user.id))
 
 
-        return { success: true, message: "Email verified successfully." }
+        return { success: true, message: "Email verified successfully. You are now being redirected to the dashboard." }
     } catch (error) {
         console.error("Error in verifyOTPForSignup:", error)
         return { success: false, message: "An error occurred while verifying the OTP" }
     }
-}
-
-async function userExistsWithoutEmailVerified(email: string): Promise<boolean> {
-    const existingUser = await db.query.userTable.findFirst({
-        where: (table) => eq(table.email, email),
-    })
-    return existingUser?.isEmailVerified === false
 }
 
 /** 
@@ -314,16 +329,23 @@ export async function initiateAccountReset(userId: string): Promise<ActionRespon
             })
             .where(eq(emailVerificationTable.userId, existingUser.id))
 
-        await sendEmail({
-            html: `Your verification code is: ${otp}`,
-            subject: "Verify your email",
+        const info = await sendEmail({
+            html:generateEmailHTML(otp),
+            subject: "Reset your password",
             to: existingUser.email,
         });
-
-        return {
-            success: true,
-            message: "Account reset initiated. You will receive an email with an OTP to verify your email.",
-            data: { userId: existingUser.id }
+        if(info.messageId){
+            return {                
+                success: true,
+                message: "Account reset initiated. You will receive an email with an OTP to verify your email.",
+                data: { userId: existingUser.id }
+            }
+        }
+        else{
+            return {
+                success: false,
+                message: "An error occurred while sending the verification email. Please try again."
+            }
         }
     } catch (error) {
         console.error("Error in initiateAccountReset:", error)

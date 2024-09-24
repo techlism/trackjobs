@@ -1,4 +1,3 @@
-// Server-side code (e.g., in an API route or Server Action)
 "use server"
 import { generateCodeVerifier, generateState } from "arctic";
 import { google } from "@/lib/lucia/oauth"

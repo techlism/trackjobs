@@ -25,17 +25,17 @@ const DarkModeSwitch = () => {
 		<div className="p-1 grid grid-cols-3 items-center gap-3 rounded-lg">
 			<button onClick={() => cycleTheme("light")}>
 				<Sun
-					className={`${theme === "light" ? "text-yellow-500 h-7 w-7" : "text-gray-500 h-6 w-6"} transition-all duration-300`}
+					className={`${theme === "light" ? "text-yellow-500 h-7 w-7" : "text-gray-100 h-6 w-6"} transition-all duration-300`}
 				/>
 			</button>
 			<button onClick={() => cycleTheme("system")}>
 				<Monitor
-					className={`${theme === "system" ? "text-blue-500 h-7 w-7" : "text-gray-500 h-6 w-6"} transition-all duration-300`}
+					className={`${theme === "system" ? "text-blue-500 h-7 w-7" : "text-gray-100 h-6 w-6"} transition-all duration-300`}
 				/>
 			</button>
 			<button onClick={() => cycleTheme("dark")}>
 				<Moon
-					className={`${theme === "dark" ? "text-indigo-500 h-7 w-7" : "text-gray-500 h-6 w-6"} transition-all duration-300`}
+					className={`${theme === "dark" ? "text-gray-700 h-7 w-7" : "text-gray-100 h-6 w-6"} transition-all duration-300`}
 				/>
 			</button>
 		</div>

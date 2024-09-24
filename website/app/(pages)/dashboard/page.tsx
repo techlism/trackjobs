@@ -8,7 +8,7 @@ export default async function Dashboard() {
   const { user } = await validateRequest();
   if (!user) {
     return (
-      <div className="grid grid-cols-1 items-center p-4 border rounded-md gap-4 mx-auto max-w-96 min-h-screen">
+      <div className="grid grid-cols-1 items-center p-4 border rounded-md gap-4 mx-auto max-w-96 min-h-[80dvh]">
         <h1>Please sign in to access the dashboard</h1> 
         <a href="/sign-in" className="p-4 border rounded-md">
           Sign-in

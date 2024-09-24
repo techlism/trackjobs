@@ -2,7 +2,7 @@ import { validateRequest, lucia } from "@/lib/lucia"
 import { cookies } from "next/headers"
 import { type NextRequest, NextResponse } from "next/server"
 
-export const POST = async (req: NextRequest) => {
+export const GET = async (req: NextRequest) => {
     try {
         const { session } = await validateRequest()
 
@@ -25,9 +25,9 @@ export const POST = async (req: NextRequest) => {
             }
         )
 
-        return NextResponse.json({ success: true })
+        return NextResponse.redirect(new URL("/"));
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : "An error occurred while signing out";
-        return NextResponse.json({ error: errorMessage }, { status: 500 })
+        return NextResponse.redirect(new URL("/", req.url));
     }
 }

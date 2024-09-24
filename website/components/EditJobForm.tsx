@@ -48,61 +48,73 @@ export function EditJobForm({ jobId, initialData }: EditJobFormProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-3xl">{jobId === "add-new" ? "Add Job" : "Edit Job"}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {message && (
-          <Alert className="mb-4">
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{message}</AlertDescription>
-          </Alert>
-        )}
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <input
-            className="w-full border p-2 rounded"
-            type="text"
-            placeholder="Role"
-            {...form.register("role")}
-          />
-          <input
-            className="w-full border p-2 rounded"
-            type="text"
-            placeholder="Company Name"
-            {...form.register("companyName")}
-          />
-          <textarea
-            className="w-full border p-2 rounded"
-            placeholder="Job Description Summary"
-            {...form.register("jobDescriptionSummary")}
-          />
-          <Controller
-            name="appliedOn"
-            control={form.control}
-            render={({ field }) => (
-              <DateAndTimePicker
-                date={field.value}
-                setDate={(date) => field.onChange(date)}
+    <div className="flex justify-center items-center min-h-[80dvh]">
+      <Card className=" max-w-[90vw] sm:max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] w-full">
+        <CardHeader>
+          <CardTitle className="text-3xl">{jobId === "add-new" ? "Add Job" : "Edit Job"}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {message && (
+            <Alert className="mb-4">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{message}</AlertDescription>
+            </Alert>
+          )}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="relative">
+              <input
+                className="w-full border p-2 rounded"
+                type="text"
+                placeholder="Role"
+                {...form.register("role")}
               />
-            )}
-          />
-          <input
-            className="w-full border p-2 rounded"
-            type="text"
-            placeholder="Link"
-            {...form.register("link")}
-          />
-          <textarea
-            className="w-full border p-2 rounded"
-            placeholder="Notes"
-            {...form.register("notes")}
-          />
-          <Button type="submit" className="w-full">
-            {jobId === "add-new" ? "Add Job" : "Update Job"}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+            </div>
+            <div className="relative">
+              <input
+                className="w-full border p-2 rounded"
+                type="text"
+                placeholder="Company Name"
+                {...form.register("companyName")}
+              />
+            </div>
+            <div className="relative">
+              <textarea
+                className="w-full border p-2 rounded"
+                placeholder="Job Description Summary"
+                {...form.register("jobDescriptionSummary")}
+              />
+            </div>
+            <Controller
+              name="appliedOn"
+              control={form.control}
+              render={({ field }) => (
+                <DateAndTimePicker
+                  date={field.value}
+                  setDate={(date) => field.onChange(date)}
+                />
+              )}
+            />
+            <div className="relative">
+              <input
+                className="w-full border p-2 rounded"
+                type="text"
+                placeholder="Link"
+                {...form.register("link")}
+              />
+            </div>
+            <div className="relative">
+              <textarea
+                className="w-full border p-2 rounded"
+                placeholder="Notes"
+                {...form.register("notes")}
+              />
+            </div>
+            <Button type="submit" className="w-full">
+              {jobId === "add-new" ? "Add Job" : "Update Job"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

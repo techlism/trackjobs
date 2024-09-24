@@ -7,7 +7,7 @@ import { lucia } from "@/lib/lucia";
 import { cookies } from "next/headers";
 import { eq } from "drizzle-orm";
 import * as argon2 from "argon2";
-import { sendEmail } from "@/lib/email";
+import { generateEmailHTML, sendEmail } from "@/lib/email";
 import { emailVerificationTable, userTable } from "@/lib/database/schema";
 
 const generateOTP = () => {
@@ -140,7 +140,7 @@ export const requestPasswordReset = async (email: string): Promise<ActionRespons
 
     // Send the password reset email
     await sendEmail({
-      html: `Your password reset code is: ${otp}`,
+      html:generateEmailHTML(otp),
       subject: "Password Reset",
       to: user.email,
     });
