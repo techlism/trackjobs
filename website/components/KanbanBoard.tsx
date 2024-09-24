@@ -73,7 +73,7 @@ export const KanbanBoard: React.FC<{ initialJobs: Job[] }> = ({ initialJobs }) =
   return (
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold">Job Tracker</h2>
+        <h2 className="text-xl font-bold">Your Dashboard</h2>
       </div>
       <Tab tabs={['Focused', 'At a Glance']}>        
         <SingleColumnView

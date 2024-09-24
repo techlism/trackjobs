@@ -74,7 +74,7 @@ export default function LandingPage() {
             { icon: FolderSyncIcon, title: "Cross-Device Sync", description: "Access your job search data from any device. Your progress is always up-to-date." },
             { icon: WatchIcon, title: "Application Tracking", description: "Keep track of every job application you submit. Never lose sight of your progress." },
             { icon: ReplaceIcon, title: "Customizable Stages", description: "Tailor your job search process with custom stages. Stay organized your way." },
-            { icon: Sparkles, title: "Enhanced with AI", description: "All jobs are processed with our AI to give you a summary of the job description and what the company needs for the role. So that can refer to it later in your job search.", fullWidth: true }
+            { icon: Sparkles, title: "Enhanced with AI", description: "All jobs are processed with AI to give you a summary of the job description and what the company needs for the role. So that can refer to it later in your job search.", fullWidth: true }
           ].map((feature, index) => (
             <motion.li 
               key={index}
