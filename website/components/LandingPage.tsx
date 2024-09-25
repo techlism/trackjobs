@@ -107,8 +107,9 @@ export default function LandingPage() {
             Our browser extension seamlessly integrates TrackJobs with your job search workflow. Never leave your browser to manage your applications.
           </p>
           <div>
-          <Link href="/sign-up" className="border btn-primary p-4 rounded-md font-semibold hover:shadow-md hover:rounded-md transition-all duration-200">              Download Extension
-            </Link>
+          <Link href="https://chromewebstore.google.com/detail/trackjobs/nhljjijjdmllkimdkfmflfpmfpopnnco" target="_blank" className="border btn-primary p-4 rounded-md font-semibold hover:shadow-md hover:rounded-md transition-all duration-200">              
+            Download Extension
+          </Link>
           </div>
         </div>
         <div className="mt-12 md:mt-0 md:w-1/2">

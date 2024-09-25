@@ -34,3 +34,5 @@ website/.vercel
 # typescript
 website/*.tsbuildinfo
 website/next-env.d.ts
+
+extension.zip
