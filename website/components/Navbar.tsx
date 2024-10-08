@@ -6,7 +6,6 @@ import { Button } from './ui/button';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation'
-import TrackJobsLogo from './TrackJobsLogo';
 
 const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -15,9 +14,9 @@ const Navbar: React.FC = () => {
         setIsOpen(!isOpen);
     };
 
-    useEffect(() => {
-        setIsOpen(false);
-    }, [pathname]);
+    // useEffect(() => {
+    //     setIsOpen(false);
+    // });
 
     return (
         <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -26,7 +25,7 @@ const Navbar: React.FC = () => {
                     <div className="flex items-center">
                         <div className="flex-shrink-0">
                             <Link href={'/'}>
-                                <TrackJobsLogo height={32} width={32} />
+                                <Image src="/trackjobs_logo.svg" height={32} width={32} alt="TrackJobs Logo" />
                             </Link>                            
                         </div>
                         <div className="hidden md:block">

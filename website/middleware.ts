@@ -10,7 +10,6 @@ export async function middleware(request: NextRequest) {
   }
 
   const headers = new Headers(request.headers);
-  const host = headers.get('x-forwarded-host');
   const protocol = headers.get('x-forwarded-proto');
   const ip = headers.get('x-forwarded-for');
 
@@ -19,7 +18,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if(!ip) {
-    return NextResponse.json({error : 'IP address not found'}, {status : 400});
+    return NextResponse.redirect(new URL('/', request.url));
   }
   
   const rateLimiter = new RateLimiter({windowSize : 1000, maxRequests : 20});
@@ -46,11 +45,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/dashboard/:path*',
-    '/profile/:path*',
-    '/sign-in',
-    '/sign-up',
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     '/api/jobs',
-    // Add any other routes that should be protected or go through this middleware
+    '/profile/:path*',
   ],
 };

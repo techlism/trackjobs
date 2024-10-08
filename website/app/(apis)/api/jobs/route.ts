@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import db from "@/lib/database/client";
 import { jobTable } from "@/lib/database/schema";
 import { OpenAI } from "openai";
 import { validateRequest } from '@/lib/lucia';
 import { eq } from 'drizzle-orm';
 import { TidyURL } from 'tidy-url';
-import { JobSchema, JobStatus } from '@/lib/types';
+import { JobSchema, type JobStatus } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 
 

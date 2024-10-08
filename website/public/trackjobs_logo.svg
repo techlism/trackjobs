@@ -1,8 +1,84 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="91.812" height="95.762" viewBox="0 0 91.812 95.762">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="91.812"
+   height="95.762"
+   viewBox="0 0 91.812 95.762"
+   version="1.1"
+   id="svg2"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title17">trackjobs_logo</title>
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient5">
+      <stop
+         style="stop-color:#754af4;stop-opacity:1;"
+         offset="0"
+         id="stop5" />
+      <stop
+         style="stop-color:#00dc91;stop-opacity:0.76000005;"
+         offset="1"
+         id="stop6" />
+    </linearGradient>
+    <filter
+       id="shadow"
+       x="-20%"
+       y="-20%"
+       width="140%"
+       height="140%">
+      <feGaussianBlur
+         in="SourceAlpha"
+         stdDeviation="2"
+         id="feGaussianBlur1" />
+      <feOffset
+         dx="2"
+         dy="2"
+         result="offsetblur"
+         id="feOffset1" />
+      <feComponentTransfer
+         id="feComponentTransfer1">
+        <feFuncA
+           type="linear"
+           slope="0.3"
+           id="feFuncA1" />
+      </feComponentTransfer>
+      <feMerge
+         id="feMerge2">
+        <feMergeNode
+           id="feMergeNode1" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode2" />
+      </feMerge>
+    </filter>
+    <linearGradient
+       xlink:href="#linearGradient5"
+       id="linearGradient6"
+       x1="36.751904"
+       y1="30.799129"
+       x2="36.493088"
+       y2="76.221375"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(0,0.12940811)" />
+  </defs>
   <path
-    fill="#5d17ea"
-    d="M74.239,2.17h-9.761v29.286H32.261V2.17h-9.762c-9.704,0-17.572,7.867-17.572,17.572v60.522
-    c0,9.212,7.09,16.751,16.107,17.498V63.671h8.135v34.165h10.738V63.671h35.797v34.091c9.018-0.747,16.107-8.286,16.107-17.498
-    V19.742C91.812,10.037,83.943,2.17,74.239,2.17z"
-  />
+     fill="#06ce88"
+     d="M 70.624295,2.0405919 H 61.299446 V 30.533671 H 30.522 V 2.0405919 h -9.325804 c -9.270395,0 -16.7868284,7.6539999 -16.7868284,17.0962371 V 78.02019 c 0,8.962584 6.7731964,14.485751 15.3872894,15.212526 V 61.876447 H 27.56816 V 93.09858 H 37.826354 48.084547 V 61.876447 H 72.023834 V 93.09858 c 8.615048,-0.726775 15.38729,-8.061656 15.38729,-17.02424 V 19.136829 C 87.412079,9.6945918 79.89469,2.0405919 70.624295,2.0405919 Z"
+     id="path2"
+     style="opacity:1;mix-blend-mode:multiply;fill:url(#linearGradient6);fill-opacity:1;stroke-width:0.964081" />
+  <metadata
+     id="metadata17">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>trackjobs_logo</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
 </svg>
