@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "description": "Track and manage your job applications with ease",
   "action": {
-    "default_popup": "popup.html",
     "default_icon": {
       "48": "trackjobs_logo_48.png",
       "128": "trackjobs_logo_128.png"
@@ -22,12 +21,23 @@
     "https://trackjobs.online/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "icons": {
     "48": "trackjobs_logo_48.png",
     "128": "trackjobs_logo_128.png"
   },
+  "web_accessible_resources": [
+    {
+      "resources": ["*.html"],
+      "matches": ["<all_urls>"]    
+    },
+    {
+      "resources" : ["*.png"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self';"
   }
