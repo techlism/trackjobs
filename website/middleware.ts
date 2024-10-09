@@ -8,6 +8,9 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === '/') {
     return NextResponse.next()
   }
+  if(request.nextUrl.pathname === '/privacy-policy') {
+    return NextResponse.next()
+  }
 
   const headers = new Headers(request.headers);
   const protocol = headers.get('x-forwarded-proto');
