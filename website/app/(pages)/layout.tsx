@@ -8,9 +8,18 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Job Tracker",
-  description: "A job tracker for tracking your job applications",
+  title: "TrackJobs",
+  description: "Track your job applications effortlessly within seconds..",
   creator: "Techlism",
+  keywords : ['jobs', 'application tracker'],
+  openGraph : {
+	images : 'https://trackjobs.online/trackjobs_og.png',
+	siteName : 'TrackJobs'
+  },
+  twitter : {
+	images : 'https://trackjobs.online/trackjobs_og.png',
+	site : '@trackjobs'
+  }
 };
 
 export default function RootLayout({
