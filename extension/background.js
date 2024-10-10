@@ -20,7 +20,14 @@ function checkAuthStatus() {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'checkAuth') {
     chrome.storage.local.get('userInfo', (result) => {
-      sendResponse(result.userInfo);
+      if(result.userInfo)
+        sendResponse(result.userInfo);
+      else{
+        checkAuthStatus();
+        chrome.storage.local.get('userInfo', (result) => {
+          sendResponse(result.userInfo);
+        })
+      }
     });
     return true;
   }if (request.action === 'openTab') {
@@ -60,12 +67,13 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.cookies.onChanged.addListener((changeInfo) => {
-  if (changeInfo.cookie.domain === 'localhost' && changeInfo.cookie.name === 'auth') {
+  if ((changeInfo.cookie.domain === 'localhost' || changeInfo.cookie.domain === 'trackjobs.online') && changeInfo.cookie.name === 'auth') {
     checkAuthStatus();
   }
 });
 
 chrome.action.onClicked.addListener((tab) => {
+    checkAuthStatus(); // might be expensive but required for good user experience
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
       files: ['content.js']

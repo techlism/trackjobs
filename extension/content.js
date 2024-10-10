@@ -124,10 +124,11 @@ function createModal() {
             }
 
             #loginStatus_trackjobs_ {
+                color : black;
                 margin: 0 0 12px;
                 text-align: center;
                 font-size: 12px;
-                font-weight: 500;
+                font-weight: 600;
             }
         </style>
         <div id="modal_trackjobs_">
