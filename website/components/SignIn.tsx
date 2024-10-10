@@ -22,6 +22,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { LockIcon, MailIcon } from "lucide-react";
 import { createGoogleAuthorizationURL } from "@/actions/oauth.action";
+import Loader from "./Loader";
 
 type FormScreens = "signInForm" | "forgotPassword" | "verifyOTP" | "resetPassword";
 
@@ -44,6 +45,7 @@ export function SignInForm() {
   const [email, setEmail] = useState("");
   const [timer, setTimer] = useState(60);
   const [disableResend, setDisableResend] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const router = useRouter();
 
   async function handleGoogleSignIn() {
@@ -93,35 +95,45 @@ export function SignInForm() {
   }, [disableResend]);
 
   async function onSignInSubmit(values: z.infer<typeof SignInSchema>) {
+    setProcessing(true);
     const res = await signIn(values);
     if (!res.success) {
       setMessage(res.message);
       setTimeout(() => setMessage(""), 5000);
+      setProcessing(false);
       return;
     }
+    setProcessing(false);
     router.push("/dashboard");
   }
 
   async function onForgotPasswordSubmit(values: { email: string }) {
+    setProcessing(true);
     setEmail(values.email);
     const res = await requestPasswordReset(values.email);
     setMessage(res.message);
     if (res.success) {
       setFormState("verifyOTP");
       setDisableResend(true);
+      setProcessing(false);
     }
+    setProcessing(false);
     setTimeout(() => setMessage(""), 5000);
   }
 
   async function onOtpSubmit(values: z.infer<typeof OtpSchema>) {
+    setProcessing(true);
     otpForm.setValue("otp", values.otp);
+    setProcessing(false);
     setFormState("resetPassword");
   }
 
   async function onResetPasswordSubmit(values: z.infer<typeof ResetPasswordSchema>) {
+    setProcessing(true);
     if (values.password !== values.confirmPassword) {
       setMessage("Passwords do not match");
       setTimeout(() => setMessage(""), 5000);
+      setProcessing(false);
       return;
     }
     const res = await verifyOTPAndResetPassword(email, otpForm.getValues("otp"), values.password);
@@ -133,7 +145,9 @@ export function SignInForm() {
       otpForm.reset();
       resetPasswordForm.reset();
     }
+    setProcessing(false);
     setTimeout(() => setMessage(""), 5000);
+
   }
 
   async function handleResendOTP() {
@@ -187,7 +201,7 @@ export function SignInForm() {
                   className="pl-10"
                 />
               </div>
-              <Button type="submit" className="w-full">Sign In</Button>
+              <Button type="submit" className="w-full">{processing ? <Loader/> : 'Sign In'}</Button>
               <Button onClick={handleGoogleSignIn} className="w-full mt-2" variant="outline">
                 Sign in with Google
               </Button> 
@@ -196,8 +210,9 @@ export function SignInForm() {
                 variant="link"
                 className="w-full"
                 onClick={() => setFormState("forgotPassword")}
+                disabled={processing}
               >
-                Forgot Password?
+                {processing ? <Loader/> : 'Forgot Password?'}
               </Button>
             </form>
           )}
@@ -213,7 +228,7 @@ export function SignInForm() {
                   className="pl-10"
                 />
               </div>
-              <Button type="submit" className="w-full">Send Reset Code</Button>
+              <Button type="submit" className="w-full" disabled={processing}>{processing ? <Loader/> : 'Send Reset Code'}</Button>
               <Button
                 type="button"
                 variant="outline"
@@ -227,27 +242,31 @@ export function SignInForm() {
 
           {formState === "verifyOTP" && (
             <form onSubmit={otpForm.handleSubmit(onOtpSubmit)} className="space-y-4">
-              <Controller
-                control={otpForm.control}
-                name="otp"
-                render={({ field }) => (
-                  <InputOTP
-                    maxLength={6}
-                    value={field.value}
-                    onChange={(value) => field.onChange(value)}
-                  >
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
-                )}
-              />
-              <Button type="submit" className="w-full">Verify OTP</Button>
+              <div className="flex justify-center items-center mx-auto w-full">
+                <Controller
+                  control={otpForm.control}
+                  name="otp"
+                  render={({ field }) => (
+                    <InputOTP
+                      maxLength={6}
+                      value={field.value}
+                      onChange={(value) => field.onChange(value)}
+                      
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  )}
+                />
+              </div>
+
+              <Button type="submit" className="w-full" disabled={processing}>{processing ? <Loader/> : 'Verify OTP'}</Button>
               <Button
                 type="button"
                 variant="outline"
@@ -280,7 +299,7 @@ export function SignInForm() {
                   className="pl-10"
                 />
               </div>
-              <Button type="submit" className="w-full">Reset Password</Button>
+              <Button type="submit" className="w-full" disabled={processing}>{processing ? <Loader/> : 'Reset Password'}</Button>
             </form>
           )}
 

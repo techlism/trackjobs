@@ -24,6 +24,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { LockIcon, MailIcon } from "lucide-react";
 import { createGoogleAuthorizationURL } from "@/actions/oauth.action";
+import Loader from "./Loader";
 
 type formScreens = "signUpForm" | "verifySignupOTP" | "resetOTP" | "resetScreen";
 
@@ -46,6 +47,7 @@ export function SignUpForm() {
   const [userId, setUserId] = useState("");
   const [timer, setTimer] = useState(60);
   const [disableResend, setDisableResend] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const router = useRouter();
 
   const signUpForm = useForm({
@@ -76,9 +78,11 @@ export function SignUpForm() {
   }, [disableResend]);
 
   async function onSignUpSubmit(values: z.infer<typeof SignUpSchema>) {
+    setProcessing(true);
     if (values.password !== values.confirmPassword) {
       setMessage("Passwords do not match");
       setTimeout(() => setMessage(""), 5000);
+      setProcessing(false);
       return;
     }
 
@@ -94,6 +98,7 @@ export function SignUpForm() {
         setMessage(res.message);
       }
       setTimeout(() => setMessage(""), 5000);
+      setProcessing(false);
       return;
     }
 
@@ -102,29 +107,36 @@ export function SignUpForm() {
     if (res?.data?.userId) {
       setUserId(res.data.userId);
     }
+    setProcessing(false);
   }
 
   async function onOtpSubmitForSignup(values: z.infer<typeof OtpSchema>) {
+    setProcessing(true);
     const res = await verifyOTPForSignup(userId, values.otp);
     setMessage(res.message);
     if (res.success) {
       if (formState === "verifySignupOTP") {
+        setProcessing(false);
         setTimeout(() => router.push("/dashboard"), 2000);
       } else {
         setTimeout(() => {
+          setProcessing(false);
           setFormState("signUpForm");
           signUpForm.reset();
         }, 2000);
       }
     }
+    setProcessing(false);
     setTimeout(() => setMessage(""), 5000);
   }
 
   async function handleResendOTP() {
+    setProcessing(true);
     const res = await resendVerificationEmail(userId);
     otpForm.reset();
     setMessage(res.message);
     setDisableResend(true);
+    setProcessing(false);
     setTimeout(() => setMessage(""), 5000);
   }
 
@@ -150,12 +162,15 @@ export function SignUpForm() {
     setTimeout(() => setMessage(""), 5000);
   }
   async function handleGoogleSignIn() {
+    setProcessing(true);
     const res = await createGoogleAuthorizationURL();
     if (!res.success || !res.data) {
       setMessage(res.error || "An error occurred");
       setTimeout(() => setMessage(""), 5000);
+      setProcessing(false);
       return;
     }
+    setProcessing(false);
     router.push(res.data);
   }
   return (
@@ -208,36 +223,39 @@ export function SignUpForm() {
                   className="pl-10"
                 />
               </div>
-              <Button type="submit" className="w-full">Sign up</Button>
-              <Button onClick={handleGoogleSignIn} className="w-full mt-2" variant="outline">
-                Sign in with Google
+              <Button type="submit" className="w-full" disabled={processing}>{processing ? <Loader/> : 'Sign Up'}</Button>
+              <Button onClick={handleGoogleSignIn} className="w-full mt-2" variant="outline" disabled={processing}>
+                {processing ? <Loader/> : 'Sign In with Google'}
               </Button> 
             </form>
           )}
 
           {(formState === "verifySignupOTP" || formState === "resetOTP") && (
             <form onSubmit={otpForm.handleSubmit(formState === "verifySignupOTP" ? onOtpSubmitForSignup : onOtpSubmitForReset)} className="space-y-4">
-              <Controller
-                control={otpForm.control}
-                name="otp"
-                render={({ field }) => (
-                  <InputOTP
-                    maxLength={6}
-                    value={field.value}
-                    onChange={(value) => field.onChange(value)}
-                  >
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
-                )}
-              />
-              <Button type="submit" className="w-full">Verify OTP</Button>
+              <div className="flex justify-center items-center w-full mx-auto">
+                <Controller
+                  control={otpForm.control}
+                  name="otp"
+                  render={({ field }) => (
+                    <InputOTP
+                      maxLength={6}
+                      value={field.value}
+                      onChange={(value) => field.onChange(value)}
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  )}
+                />
+              </div>
+              
+              <Button type="submit" className="w-full">{processing ? <Loader/> : 'Verify OTP'}</Button>
               <Button
                 type="button"
                 variant="outline"
@@ -252,7 +270,7 @@ export function SignUpForm() {
 
           {formState === "resetScreen" && (
             <div className="space-y-4">
-              <Button onClick={handleAccountReset} className="w-full">Reset Account</Button>
+              <Button onClick={handleAccountReset} disabled={processing} className="w-full">{processing ? <Loader/> : 'Reset Account'}</Button>
               <Button
                 onClick={() => setFormState("signUpForm")}
                 variant="outline"

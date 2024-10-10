@@ -21,11 +21,11 @@ const generateOTP = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-async function userEntryExists(email: string): Promise<boolean> {
+async function userEntryExists(email: string) {
     const existingUser = await db.query.userTable.findFirst({
         where: (table) => eq(table.email, email),
     })
-    return !!existingUser;
+    return existingUser;
 }
 
 /**
@@ -93,13 +93,13 @@ export const resendVerificationEmail = async (userId: string): Promise<ActionRes
 /**
  * 
  * @param values : SignUpSchema
- * @returns success: false if user already exists. In case of success: true, an email with OTP will be sent to the user and returns the userId as data
+ * @returns success: false if user already exists. In case of success: true, an email with an OTP will be sent to the user and returns the userId as data
  */
 
 export const signUp = async (values: z.infer<typeof SignUpSchema>): Promise<ActionResponse> => {
     try {
         SignUpSchema.parse(values);
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // biome-ignore lint/suspicious/noExplicitAny: <No explanation>
       } catch (error: any) {
         return {
           success: false,
@@ -117,24 +117,29 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>): Promise<Acti
                 email: values.email,
                 hashedPassword,
                 provider: "email",
-            }).returning({
-                id: userTable.id,
             })
         }
-        else{
-        const userDetails = await db.query.userTable.findFirst({ where: (table) => eq(table.email, values.email) });
-            if (userDetails && userDetails.isEmailVerified === false) {
+        if(userExists && userExists.isEmailVerified === true){
+            return {
+                success: false,
+                message: "User already exists. Please login.",
+                data: { userId: userExists.id }
+            }
+        }
+
+        if(userExists && userExists.isEmailVerified === false && userExists.hashedPassword){
+            const isValidPassword = await argon2.verify(userExists?.hashedPassword, values?.password);
+            if(!isValidPassword){
                 return {
                     success: false,
-                    message: "User already exists. Please verify your email .",
-                    data: { userId: userDetails.id }
+                    message: "You've already attempted to sign up and your password is incorrect. If you forgot your password, please reset your account.",
                 }
             }
-            else if(userDetails && userDetails.isEmailVerified === true){
-                return {
-                    success: false,
-                    message: "User already exists. Please login.",
-                    data: { userId: userDetails.id }
+            // Now check if there's an entry in emailVerificationTable if yes then get rid of it (but only if password is correct)
+            if(isValidPassword){
+                const verificationEntry = await db.query.emailVerificationTable.findFirst({where : (table) => eq(table.userId, userExists.id)});
+                if(verificationEntry){
+                    await db.delete(emailVerificationTable).where(eq(emailVerificationTable.userId, userExists.id));
                 }
             }
         }
@@ -152,21 +157,32 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>): Promise<Acti
             await db.insert(emailVerificationTable).values({
                 code: otp,    
                 id: crypto.randomUUID(),
-                userId,
+                userId : userExists ? userExists.id : userId,
                 sentAt: new Date(),
             })
             return {
                 success: true,
-                message: "You will receive an email with an OTP to verify your email. Please verify your email to complete the sign-up process.",
+                message: "You will receive an email with an OTP to verify your email.",
                 data: { userId }
             }
         }
+        // biome-ignore lint/style/noUselessElse: <explanation>
         else{
+            // If by any reason email is not sent, delete the user entry
+            const verificationEntry = await db.query.emailVerificationTable.findFirst({
+                where: eq(emailVerificationTable.userId, userId),
+            });
+
+            if (verificationEntry) {
+                await db.delete(emailVerificationTable).where(eq(emailVerificationTable.userId, userId));
+            }
+
+            await db.delete(userTable).where(eq(userTable.id, userId));
             return {
                 success: false,
                 message: "An error occurred while sending the verification email. Please try again."
-            }
-        }        
+            }     
+        }       
     } catch (error) {
         console.error("Error in signUp:", error)
         return { success: false, message: "An error occurred during the sign-up process" }
@@ -341,11 +357,10 @@ export async function initiateAccountReset(userId: string): Promise<ActionRespon
                 data: { userId: existingUser.id }
             }
         }
-        else{
-            return {
-                success: false,
-                message: "An error occurred while sending the verification email. Please try again."
-            }
+        
+        return {
+            success: false,
+            message: "An error occurred while sending the verification email. Please try again."
         }
     } catch (error) {
         console.error("Error in initiateAccountReset:", error)

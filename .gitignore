@@ -35,4 +35,4 @@ website/.vercel
 website/*.tsbuildinfo
 website/next-env.d.ts
 
-extension.zip
+extension/extension.zip
