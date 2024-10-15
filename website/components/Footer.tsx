@@ -15,7 +15,7 @@ export default async function Footer() {
 						<Link href="/privacy-policy" className="hover:underline">Privacy Policy</Link>
 					</div>
 				</div>
-				<div>
+				<div className="mt-5 sm:mt-0 md:mt-0 lg:mt-0 xl:mt-0">
 					<DarkModeSwitch />
 				</div>
 			</div>

@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { KanbanIcon, FolderSyncIcon, WatchIcon, ReplaceIcon, Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
+import VideoEmbed from "./VideoEmbed"
 
 export default function LandingPage() {
   return (
@@ -97,7 +98,7 @@ export default function LandingPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col md:flex-row items-center justify-between py-16"
+        className="flex flex-col md:flex-row items-center py-16 max-w-full"
       >
         <div className="flex flex-col space-y-6 md:w-1/2">
           <h2 className="text-3xl font-bold sm:text-5xl leading-tight">
@@ -112,9 +113,7 @@ export default function LandingPage() {
           </Link>
           </div>
         </div>
-        <div className="mt-12 md:mt-0 md:w-1/2">
-          <iframe className="rounded-lg" width="560" height="315" src="https://www.youtube.com/embed/H8vkF5QLa_4?si=mYFCfe6E7Wt3DYpI" title="TrackJobs Demo" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen/>
-        </div>
+        <VideoEmbed/>
       </motion.section>
     </div>
   )
