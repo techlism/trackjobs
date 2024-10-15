@@ -22,20 +22,20 @@ const DarkModeSwitch = () => {
 	};
 
 	return (
-		<div className="p-1 grid grid-cols-3 items-center gap-3 rounded-lg">
-			<button onClick={() => cycleTheme("light")}>
+		<div className="grid grid-cols-3 items-center rounded-lg border">
+			<button type="button" onClick={() => cycleTheme("light")} className="p-1 flex items-center justify-center h-full">
 				<Sun
-					className={`${theme === "light" ? "text-yellow-500 h-7 w-7" : "text-gray-100 h-6 w-6"} transition-all duration-300`}
+					className={`${theme === "light" ? "text-yellow-500 h-6 w-6" : "text-gray-100 h-5 w-5"} transition-all duration-300`}
 				/>
 			</button>
-			<button onClick={() => cycleTheme("system")}>
+			<button type="button" onClick={() => cycleTheme("system")} className="border-r border-l p-1 flex items-center justify-center h-full">
 				<Monitor
-					className={`${theme === "system" ? "text-blue-500 h-7 w-7" : "text-gray-100 h-6 w-6"} transition-all duration-300`}
+					className={`${theme === "system" ? "text-neutral-400 h-6 w-6" : "text-gray-100 h-5 w-5"} transition-all duration-300`}
 				/>
 			</button>
-			<button onClick={() => cycleTheme("dark")}>
+			<button type="button" onClick={() => cycleTheme("dark")} className="p-1 flex items-center justify-center h-full">
 				<Moon
-					className={`${theme === "dark" ? "text-gray-700 h-7 w-7" : "text-gray-100 h-6 w-6"} transition-all duration-300`}
+					className={`${theme === "dark" ? "text-blue-400 h-6 w-6" : "text-gray-100 h-5 w-5"} transition-all duration-300`}
 				/>
 			</button>
 		</div>

@@ -113,7 +113,7 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="mt-12 md:mt-0 md:w-1/2">
-          {/* Add an image or illustration for the browser extension here */}
+          <iframe className="rounded-lg" width="560" height="315" src="https://www.youtube.com/embed/H8vkF5QLa_4?si=mYFCfe6E7Wt3DYpI" title="TrackJobs Demo" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen/>
         </div>
       </motion.section>
     </div>
