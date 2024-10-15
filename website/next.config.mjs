@@ -14,7 +14,16 @@ const nextConfig = {
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           {
             key: 'Content-Security-Policy',
-            value: `default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' ${process.env.CHROME_EXTENSION_ORIGIN};`
+            value: `
+              default-src 'self';
+              script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.youtube.com;
+              style-src 'self' 'unsafe-inline';
+              img-src 'self' data: https://www.youtube.com https://i.ytimg.com;
+              font-src 'self' data:;
+              connect-src 'self' ${process.env.CHROME_EXTENSION_ORIGIN};
+              frame-src 'self' https://www.youtube.com;
+              media-src 'self' https://www.youtube.com;
+            `.replace(/\s+/g, ' ').trim()
           },
           {
             key: 'Access-Control-Allow-Headers',
