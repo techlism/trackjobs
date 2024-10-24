@@ -15,7 +15,7 @@ export const SingleColumnView: React.FC<SingleColumnViewProps> = ({ jobs, onMove
   const [selectedStatus, setSelectedStatus] = React.useState<JobStatusType>('Saved');
 
   return (
-    <div className="p-4">
+    <div className="flex flex-col mx-auto">
       <Select onValueChange={(value) => setSelectedStatus(value as JobStatusType)} defaultValue="Saved">
         <SelectTrigger className="w-full focus:ring-0 font-medium">
           <SelectValue placeholder="Select a status"/>

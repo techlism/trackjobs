@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { JobSchema, Job } from "@/lib/types";
+import { JobSchema, type Job } from "@/lib/types";
 import { addJob, updateJob } from "@/app/(pages)/dashboard/action";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { z } from "zod";
+import type { z } from "zod";
 import DateAndTimePicker from "@/components/ui/DatePicker";
+import Loader from "./Loader";
 
 type EditJobFormProps = {
   jobId?: string;
@@ -20,6 +21,7 @@ type EditJobFormProps = {
 export function EditJobForm({ jobId, initialData }: EditJobFormProps) {
   const [message, setMessage] = useState("");
   const router = useRouter();
+  const [loading , setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof JobSchema>>({
     resolver: zodResolver(JobSchema),
@@ -30,10 +32,12 @@ export function EditJobForm({ jobId, initialData }: EditJobFormProps) {
   });
 
   async function onSubmit(values: z.infer<typeof JobSchema>) {
-    let res;
+    setLoading(true);
+    let res : string;
     if (jobId === "add-new") {
       res = await addJob(values);
     } else {
+      // biome-ignore lint/style/noNonNullAssertion: <explanation>
       res = await updateJob(jobId!, values);
     }
 
@@ -41,17 +45,17 @@ export function EditJobForm({ jobId, initialData }: EditJobFormProps) {
     if (result.error) {
       setMessage(result.error);
       setTimeout(() => setMessage(""), 5000);
+      setLoading(false);
       return;
     }
-
+    setLoading(false);
     router.push("/dashboard");
   }
 
   return (
-    <div className="flex justify-center items-center min-h-[80dvh]">
-      <Card className=" max-w-[90vw] sm:max-w-[80vw] md:max-w-[70vw] lg:max-w-[60vw] w-full">
+      <Card className="w-72 md:w-96 lg:w-[450px] xl:w-[550px]">
         <CardHeader>
-          <CardTitle className="text-3xl">{jobId === "add-new" ? "Add Job" : "Edit Job"}</CardTitle>
+          <CardTitle className="text-3xl">{jobId === "add-new" ? "Add a new Job" : "Edit Job"}</CardTitle>
         </CardHeader>
         <CardContent>
           {message && (
@@ -110,11 +114,10 @@ export function EditJobForm({ jobId, initialData }: EditJobFormProps) {
               />
             </div>
             <Button type="submit" className="w-full">
-              {jobId === "add-new" ? "Add Job" : "Update Job"}
+              {loading ? <Loader/> : (jobId === "add-new" ? "Add Job" : "Update Job")}
             </Button>
           </form>
         </CardContent>
       </Card>
-    </div>
   );
 }

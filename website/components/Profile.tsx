@@ -15,8 +15,8 @@ export function Profile({ user }: ProfileProps) {
   const router = useRouter();
 
   return (
-    <div className="flex items-center justify-center min-h-[78dvh] bg-background">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center bg-background">
+      <Card className="min-w-72 md:min-w-96 lg:min-w-[424px] xl:min-w-[450px]">
         <CardHeader>
           <CardTitle className="text-3xl text-center">Profile</CardTitle>
           <CardDescription className="text-center">Your account information</CardDescription>

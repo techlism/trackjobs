@@ -1,7 +1,7 @@
 import { EditJobForm } from "@/components/EditJobForm";
 import { fetchJobData } from "../../action";
 import { redirect } from "next/navigation";
-import { Job } from "@/lib/types";
+import type { Job } from "@/lib/types";
 
 export default async function Page({ params }: { params: { job_id: string } }) {
   const { job_id } = params;
@@ -11,10 +11,15 @@ export default async function Page({ params }: { params: { job_id: string } }) {
   }
 
   const initialData = job_id === "add-new" ? undefined : await fetchJobData(job_id);
+
   const parsedData = initialData ? JSON.parse(initialData) : undefined;   
-  if(parsedData && parsedData.error) {
+  if(parsedData?.error) {
     return redirect("/dashboard");
   }
   const job = parsedData as Partial<Job>;
-  return <EditJobForm jobId={job_id} initialData={job} />;
+  return (
+    <div className="flex justify-center align-middle items-center my-auto">
+      <EditJobForm jobId={job_id} initialData={job} />
+    </div>
+  );
 }

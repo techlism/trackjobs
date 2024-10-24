@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import type React from "react";
 import type { Job, JobStatus as JobStatusType } from "@/lib/types";
 import { Button } from "./ui/button";
 import {
@@ -63,7 +63,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
       <ScrollArea className="h-[250px] px-2">
         <ScrollBar className={`${colorBasedOnStatus(status, 'scrollBar')}`} />
         {jobs.map((job) => (
-          <div key={job.id} className={`mb-2 mx-1.5 max-w-[99.8%] hover:scale-[1.04] transition-all duration-150 hover:rounded-md hover:shadow-sm`}>
+          <div key={job.id} className={"mb-2 mx-1.5 max-w-[99.8%] hover:scale-[1.04] transition-all duration-150 hover:rounded-md hover:shadow-sm"}>
             <div className={`flex justify-between items-center rounded-md p-2 ${colorBasedOnStatus(status, 'card')} `}>
               <div className="font-medium max-w-[95%] grid grid-cols-1 text-wrap">
                 <h4 className={`${colorBasedOnStatus(status, 'text')} text-base`}>{job.role}</h4>

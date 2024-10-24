@@ -174,8 +174,8 @@ export function SignUpForm() {
     router.push(res.data);
   }
   return (
-    <div className="flex items-center justify-center min-h-[80dvh] bg-background">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center bg-background">
+      <Card className="min-w-72 md:min-w-96 lg:min-w-[424px] xl:min-w-[450px]">
         <CardHeader>
           <CardTitle className="text-3xl text-center">{currentTitle(formState)}</CardTitle>
           <CardDescription className="text-center">

@@ -1,13 +1,18 @@
 'use client'
 import Link from 'next/link';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { type HTMLAttributes, useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils/utils';
 
-const Navbar: React.FC = () => {
+type NavbarProps = {
+    className?: HTMLAttributes<HTMLDivElement>['className'];
+}
+
+const Navbar: React.FC<NavbarProps> = ({ className } : NavbarProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
     const toggleNavbar = () => {
@@ -19,7 +24,7 @@ const Navbar: React.FC = () => {
     // });
 
     return (
-        <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <nav className={cn("sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60", className)}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center xl:justify-start 2xl:justify-start lg:justify-start md:justify-start justify-between h-16 space-x-4">
                     <div className="flex items-center">

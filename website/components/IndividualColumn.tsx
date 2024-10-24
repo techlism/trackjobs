@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import type React from "react";
 import type { Job, JobStatus as JobStatusType } from "@/lib/types";
 import { Button } from "./ui/button";
 import {
@@ -54,7 +54,7 @@ export const IndividualColumn: React.FC<IndividualColumnProps> = ({
   onDeleteJob,
 }) => {
   return (
-    <div className={`rounded-lg shadow-md ${colorBasedOnStatus(status, 'background')} min-w-[280px] mx-auto sm:min-w-[350px] md:min-w-[450px] lg:min-w-[550px] xl:min-w-[750px]`}>
+    <div className={`rounded-lg shadow-md ${colorBasedOnStatus(status, 'background')} min-w-[250px] mx-auto sm:min-w-[350px] md:min-w-[450px] lg:min-w-[550px] xl:min-w-[750px]`}>
       <div className="flex items-center justify-between p-2.5">
         <h3 className={`text-xl font-bold ${colorBasedOnStatus(status, 'text')}`}>{status}</h3>
         <div className={`text-lg font-medium ${colorBasedOnStatus(status, 'text')}`}>{jobs.length}</div>
@@ -63,7 +63,7 @@ export const IndividualColumn: React.FC<IndividualColumnProps> = ({
       <ScrollArea className="h-[55dvh] px-2">
         <ScrollBar className={`${colorBasedOnStatus(status, 'scrollBar')}`} />
         {jobs.map((job) => (
-          <div key={job.id} className={`mb-2 mx-2 max-w-[99.8%] hover:scale-[1.02] transition-all duration-150 hover:rounded-md hover:shadow-sm`}>
+          <div key={job.id} className={"mb-2 mx-2 max-w-[99.8%] hover:scale-[1.02] transition-all duration-150 hover:rounded-md hover:shadow-sm"}>
             <div className={`flex justify-between items-center rounded-md p-2 ${colorBasedOnStatus(status, 'card')} `}>
               <div className="font-medium max-w-[95%] grid grid-cols-1 text-wrap">
                 <h4 className={`${colorBasedOnStatus(status, 'text')} text-base`}>{job.role}</h4>

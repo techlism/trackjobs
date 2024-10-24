@@ -15,29 +15,34 @@ const DarkModeSwitch = () => {
 
 	if (!mounted) return null;
 
-	type themes = "light" | "dark" | "system";
-
-	const cycleTheme = (theme: themes) => {
-		setTheme(theme);
-	};
+	const themes = [
+		{ id: "light", icon: Sun, color: "text-amber-500" },
+		{ id: "system", icon: Monitor, color: "text-purple-400" },
+		{ id: "dark", icon: Moon, color: "text-blue-400" },
+	] as const;
 
 	return (
-		<div className="grid grid-cols-3 items-center rounded-lg border">
-			<button type="button" onClick={() => cycleTheme("light")} className="p-1 flex items-center justify-center h-full">
-				<Sun
-					className={`${theme === "light" ? "text-yellow-500 h-6 w-6" : "text-gray-100 h-5 w-5"} transition-all duration-300`}
-				/>
-			</button>
-			<button type="button" onClick={() => cycleTheme("system")} className="border-r border-l p-1 flex items-center justify-center h-full">
-				<Monitor
-					className={`${theme === "system" ? "text-neutral-400 h-6 w-6" : "text-gray-100 h-5 w-5"} transition-all duration-300`}
-				/>
-			</button>
-			<button type="button" onClick={() => cycleTheme("dark")} className="p-1 flex items-center justify-center h-full">
-				<Moon
-					className={`${theme === "dark" ? "text-blue-400 h-6 w-6" : "text-gray-100 h-5 w-5"} transition-all duration-300`}
-				/>
-			</button>
+		<div className="inline-flex items-center bg-background/30 rounded-lg p-1 backdrop-blur-sm border border-border/50 shadow-sm">
+			{themes.map(({ id, icon: Icon, color }) => (
+				<button
+					type="button"
+					key={id}
+					onClick={() => setTheme(id)}
+					className={`
+						flex items-center justify-center p-2 rounded-md transition-all duration-200 ease-in-out
+            			${theme === id ? "bg-background" : "hover:bg-background/50"}
+            			${theme === id ? "scale-105" : "scale-100"}
+            			${id !== "light" ? "ml-1" : ""}`}
+					aria-label={`Switch to ${id} theme`}
+				>
+					<Icon
+						className={`
+							w-4 h-4 transition-all duration-200
+							${theme === id ? color : "text-muted"}
+							${theme === id ? "scale-110" : "scale-100"}`}
+					/>
+				</button>
+			))}
 		</div>
 	);
 };
