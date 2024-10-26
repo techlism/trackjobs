@@ -7,6 +7,7 @@ import { eq } from 'drizzle-orm';
 import { TidyURL } from 'tidy-url';
 import { JobSchema, type JobStatus } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
+import { encrypt } from '@/lib/encryption/encryptor';
 
 
 const openai = new OpenAI({
@@ -72,7 +73,7 @@ export async function POST(req: NextRequest) {
       // Remove backticks and "json" identifier if present
       const jsonString = rawContent.replace(/^```json\n|\n```$/g, '').trim();
       
-      let extractedData;
+      let extractedData : { isJobPosting: true, role?: string, company?: string, summary?: string } | {isJobPosting: false, message: string};
       try {
         extractedData = JSON.parse(jsonString);
         if (!extractedData.isJobPosting) {
@@ -91,13 +92,14 @@ export async function POST(req: NextRequest) {
       
     const parsedJobDetails = JobSchema.parse({
         userId : userId,
-        role: extractedData.role,
-        companyName: extractedData.company,
-        jobDescriptionSummary: extractedData.summary,
+        role: encrypt(extractedData.role),
+        companyName: encrypt(extractedData.company),
+        jobDescriptionSummary: encrypt(extractedData.summary),
         appliedOn: Date.now(),
         currentStatus: jobStatus,
-        link: cleanedUrl,
+        link: cleanedUrl
     })
+    // link to the job cannot be encrypted in the current implementation because it is a key in the database.
 
     const newJob = await db.insert(jobTable).values({
         ...parsedJobDetails,
