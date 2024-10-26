@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { CalendarIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
 
-import { cn } from "@/lib/utils/utils"
+import { cn } from "@/utils/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { TimePicker } from "@/components/ui/time"
@@ -58,7 +58,7 @@ export default function DateAndTimePicker({ date, setDate }: DatePickerProps) {
 
   return (
     <div className="flex flex-col">
-      <label htmlFor="datetime" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+      <label htmlFor="datetime" className="text-sm mb-1 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
         Date and Time
       </label>
       <Popover>

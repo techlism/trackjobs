@@ -53,7 +53,7 @@ export function EditJobForm({ jobId, initialData }: EditJobFormProps) {
   }
 
   return (
-      <Card className="w-72 md:w-96 lg:w-[450px] xl:w-[550px]">
+      <Card className="w-72 md:w-96 lg:w-[450px] xl:w-[550px] my-6">
         <CardHeader>
           <CardTitle className="text-3xl">{jobId === "add-new" ? "Add a new Job" : "Edit Job"}</CardTitle>
         </CardHeader>
@@ -64,7 +64,7 @@ export function EditJobForm({ jobId, initialData }: EditJobFormProps) {
               <AlertDescription>{message}</AlertDescription>
             </Alert>
           )}
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <div className="relative">
               <input
                 className="w-full border p-2 rounded"

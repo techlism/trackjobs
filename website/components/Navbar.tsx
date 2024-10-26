@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { usePathname } from 'next/navigation'
-import { cn } from '@/lib/utils/utils';
+import { cn } from '@/utils/utils';
 
 type NavbarProps = {
     className?: HTMLAttributes<HTMLDivElement>['className'];

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import DarkModeSwitch from "./DarkModeSwitch";
 import type { HTMLAttributes } from "react";
-import { cn } from "@/lib/utils/utils";
+import { cn } from "@/utils/utils";
 
 type FooterProps = {
 	className?: HTMLAttributes<HTMLDivElement>["className"];
