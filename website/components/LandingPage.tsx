@@ -76,7 +76,7 @@ export default function LandingPage() {
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.5 }}
-				className="py-8 px-6 rounded-lg border border-border/50 shadow-md bg-card"
+				className="py-8 px-6 rounded-lg border border-border/65 shadow-md bg-card"
 			>
 				<h2 className="text-3xl font-bold mb-2 text-center">
 					Features to Keep You Organized
@@ -84,7 +84,7 @@ export default function LandingPage() {
 				<p className="text-muted-foreground mb-3 text-center max-w-2xl mx-auto">
           Here are some key features that TrackJobs offers to help you stay organized.
 				</p>
-				<ul className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+				<ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 ">
 					{[
 						{
 							illustrationPath: "/career.svg",
@@ -110,9 +110,9 @@ export default function LandingPage() {
 						{
 							illustrationPath: "/stage.svg",
 							illustrationAlt: "customizable stage illustration",
-							title: "Customizable Stages",
+							title: "Comprehensive Stages",
 							description:
-								"Tailor your job search process with custom stages that fit your unique workflow. Create, edit, and organize stages to match your job search strategy, helping you stay organized and focused on your goals.",
+								"Create, edit, and organize applications throughout stages to match your job search strategy, helping you stay organized and focused on your goals.",
 						},
 						{
 							illustrationPath: "/ai.svg",
@@ -128,13 +128,14 @@ export default function LandingPage() {
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ delay: index * 0.1, duration: 0.5 }}
-							className={`flex items-center hover:scale-105 gap-6 bg-background p-6 rounded-xl hover:shadow-md border border-border/70 hover:border-primary  hover:shadow-primary transition-all ease-in-out duration-200 ${feature.fullWidth ? "col-span-1 md:col-span-2" : ""}`}
+							className={`flex lg:flex-row xl:flex-row flex-col items-center hover:scale-105 gap-6 p-6 rounded-xl hover:shadow-md border border-border/85 hover:border-primary  hover:shadow-primary transition-all ease-in-out duration-200 ${feature.fullWidth ? "col-span-1 md:col-span-2" : ""}`}
 						>		
 								<IllustrationRenderer
 									illustrationPath={feature.illustrationPath}
 									illustrationAlt={feature.illustrationAlt}
 								/>
-                <Separator orientation="vertical" />
+                <Separator orientation="vertical" className="hidden lg:block" />
+                <Separator orientation="horizontal" className="block lg:hidden xl:hidden w-full" />
                 <div>
                   <h3 className="text-2xl font-bold">{feature.title}</h3>
                   <p className="text-muted-foreground">{feature.description}</p>
