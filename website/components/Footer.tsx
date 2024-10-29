@@ -13,7 +13,7 @@ type FooterProps = {
 
 export default function Footer({ className }: FooterProps) {
   return (
-    <footer className={cn("text-foreground/80 py-12 border-t px-4", className)}>
+    <footer className={cn("text-foreground/90 py-12 border-t px-4", className)}>
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">

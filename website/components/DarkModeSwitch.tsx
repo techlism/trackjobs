@@ -38,7 +38,7 @@ const DarkModeSwitch = () => {
 					<Icon
 						className={`
 							w-4 h-4 transition-all duration-100 ease-in-out
-							${theme === id ? color : "text-muted"}
+							${theme === id ? color : "text-foreground/60"}
 							${theme === id ? "scale-110" : "scale-100"}`}
 					/>
 				</button>
