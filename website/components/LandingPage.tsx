@@ -38,7 +38,9 @@ export default function LandingPage() {
 						className="text-muted-foreground text-xl"
 					>
 						Organize your job search with our powerful kanban-style board. Never
-						lose track of your applications <span className="text-2xl font-medium text-destructive">again</span>.
+						lose track of your applications{" "}
+						<span className="text-2xl font-medium text-destructive">again</span>
+						.
 					</motion.p>
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
@@ -47,7 +49,7 @@ export default function LandingPage() {
 					>
 						<Link
 							href="/sign-up"
-							className="border btn-primary p-4 rounded-md font-semibold hover:shadow-md hover:rounded-md transition-all duration-200"
+							className="bg-primary text-white p-4 rounded-md hover:bg-primary/95 font-semibold hover:shadow-md hover:shadow-primary hover:rounded-md transition-all duration-200"
 						>
 							Get Started for Free
 						</Link>
@@ -76,13 +78,14 @@ export default function LandingPage() {
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.5 }}
-				className="py-8 px-6 rounded-lg border border-border/65 shadow-md bg-card"
+				className="py-8 px-6 rounded-lg border border-border/65 shadow-md bg-card glow-effect-background"
 			>
 				<h2 className="text-3xl font-bold mb-2 text-center">
 					Features to Keep You Organized
 				</h2>
 				<p className="text-muted-foreground mb-3 text-center max-w-2xl mx-auto">
-          Here are some key features that TrackJobs offers to help you stay organized.
+					Here are some key features that TrackJobs offers to help you stay
+					organized.
 				</p>
 				<ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 ">
 					{[
@@ -128,24 +131,27 @@ export default function LandingPage() {
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ delay: index * 0.1, duration: 0.5 }}
-							className={`flex lg:flex-row xl:flex-row flex-col items-center hover:scale-105 gap-6 p-6 rounded-xl hover:shadow-md border border-border/85 hover:border-primary  hover:shadow-primary transition-all ease-in-out duration-200 ${feature.fullWidth ? "col-span-1 md:col-span-2" : ""}`}
-						>		
-								<IllustrationRenderer
-									illustrationPath={feature.illustrationPath}
-									illustrationAlt={feature.illustrationAlt}
-								/>
-                <Separator orientation="vertical" className="hidden lg:block" />
-                <Separator orientation="horizontal" className="block lg:hidden xl:hidden w-full" />
-                <div>
-                  <h3 className="text-2xl font-bold">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
-                </div>
+							className={`backdrop-blur bg-background/40 supports-[backdrop-filter]:bg-background/40 flex lg:flex-row xl:flex-row flex-col items-center hover:scale-105 gap-6 p-6 rounded-xl hover:shadow-md border border-border/85 hover:border-primary  hover:shadow-primary transition-all ease-in-out duration-200 ${feature.fullWidth ? "col-span-1 md:col-span-2" : ""}`}
+						>
+							<IllustrationRenderer
+								illustrationPath={feature.illustrationPath}
+								illustrationAlt={feature.illustrationAlt}
+							/>
+							<Separator orientation="vertical" className="hidden lg:block bg-primary" />
+							<Separator
+								orientation="horizontal"
+								className="block lg:hidden xl:hidden w-full bg-primary"
+							/>
+							<div>
+								<h3 className="text-2xl font-bold">{feature.title}</h3>
+								<p className="text-foreground/70">{feature.description}</p>
+							</div>
 						</motion.li>
 					))}
 				</ul>
-        <p className="font-medium mt-1 ml-1 text-muted-foreground">
-          and many more...
-        </p>
+				<p className="font-medium mt-1 ml-1 text-muted-foreground">
+					and many more...
+				</p>
 			</motion.section>
 
 			<motion.section

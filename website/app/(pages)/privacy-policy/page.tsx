@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default async function PrivacyPolicy() {
     return (
-      <main className="mx-auto max-w-7xl min-h-[76dvh] ">
+      <main className="mx-auto max-w-7xl min-h-[95dvh] ">
         <div className="p-4 max-w-[95%] mx-auto flex flex-col justify-center items-start border mt-10 rounded-md shadow-md">
         <h1 className="text-3xl font-bold">Privacy Policy</h1>
         <Separator className="mb-4"/>

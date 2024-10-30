@@ -2,11 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
+
 
 @layer base {
   :root {
@@ -62,6 +58,19 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .glow-effect-background{
+    background-image: url('/glow.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;    
+  }
+
 }
 
 @layer base {
