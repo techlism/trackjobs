@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import VideoEmbed from "./VideoEmbed";
 import IllustrationRenderer from "./IllustrationRenderer";
 import { Separator } from "./ui/separator";
+import { DummyKanbanHomePage } from "./DummyKanbanHomePage";
 
 export default function LandingPage() {
 	return (
@@ -21,12 +22,12 @@ export default function LandingPage() {
 				transition={{ duration: 0.5 }}
 				className="flex flex-col md:flex-row items-center justify-between py-8 min-h-[95dvh]"
 			>
-				<div className="flex flex-col space-y-6 md:w-1/2">
+				<div className="flex flex-col space-y-6 md:w-1/3 lg:w-1/2 xl:w-full">
 					<motion.h1
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ delay: 0.2, duration: 0.5 }}
-						className="text-4xl lg:text-6xl md:text-5xl sm:text-4xl font-bold leading-tight"
+						className="text-4xl lg:text-6xl md:text-4xl sm:text-4xl font-bold leading-tight"
 					>
 						Stay on Top of Your <span className="text-primary">Job Search</span>{" "}
 						with TrackJobs
@@ -35,11 +36,11 @@ export default function LandingPage() {
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ delay: 0.4, duration: 0.5 }}
-						className="text-muted-foreground text-xl"
+						className="text-muted-foreground text-xl md:text-lg text-start pr-1"
 					>
 						Organize your job search with our powerful kanban-style board. Never
 						lose track of your applications{" "}
-						<span className="text-2xl font-medium text-destructive">again</span>
+						<span className="text-2xl font-medium md:text-xl text-red-500">again</span>
 						.
 					</motion.p>
 					<motion.div
@@ -59,9 +60,9 @@ export default function LandingPage() {
 					initial={{ opacity: 0, scale: 0.9 }}
 					animate={{ opacity: 1, scale: 1 }}
 					transition={{ delay: 0.4, duration: 0.5 }}
-					className="mt-12 md:mt-0 md:w-1/2"
+					className="mt-12 md:mt-0 md:w-2/3 w-full lg:w-1/2 xl:w-full"
 				>
-					<img
+					{/* <img
 						src="/kanban_demo_light.png"
 						alt="TrackJobs Kanban Board"
 						className="dark:hidden w-full max-w-[600px] rounded-lg shadow-2xl"
@@ -70,7 +71,8 @@ export default function LandingPage() {
 						src="/kanban_demo_dark.png"
 						alt="TrackJobs Kanban Board"
 						className="hidden dark:block w-full max-w-[600px] rounded-lg shadow-2xl"
-					/>
+					/> */}
+					<DummyKanbanHomePage />
 				</motion.div>
 			</motion.section>
 
@@ -131,7 +133,7 @@ export default function LandingPage() {
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ delay: index * 0.1, duration: 0.5 }}
-							className={`backdrop-blur bg-background/40 supports-[backdrop-filter]:bg-background/40 flex lg:flex-row xl:flex-row flex-col items-center hover:scale-105 gap-6 p-6 rounded-xl hover:shadow-md border border-border/85 hover:border-primary  hover:shadow-primary transition-all ease-in-out duration-200 ${feature.fullWidth ? "col-span-1 md:col-span-2" : ""}`}
+							className={`backdrop-blur bg-background/40 supports-[backdrop-filter]:bg-background/40 flex lg:flex-row xl:flex-row flex-col items-center hover:scale-105 gap-4 p-6 rounded-xl hover:shadow-md border border-border/85 hover:border-primary  hover:shadow-primary transition-all ease-in-out duration-200 ${feature.fullWidth ? "col-span-1 md:col-span-2" : ""}`}
 						>
 							<IllustrationRenderer
 								illustrationPath={feature.illustrationPath}
@@ -174,7 +176,7 @@ export default function LandingPage() {
 						<Link
 							href="https://chromewebstore.google.com/detail/trackjobs/nhljjijjdmllkimdkfmflfpmfpopnnco"
 							target="_blank"
-							className="border btn-primary p-4 rounded-md font-semibold hover:shadow-md hover:rounded-md transition-all duration-200"
+							className="bg-primary text-white p-4 rounded-md hover:bg-primary/95 font-semibold hover:shadow-md hover:shadow-primary hover:rounded-md transition-all duration-200"
 						>
 							Download Extension
 						</Link>

@@ -31,7 +31,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className={`${GeistSans.className} flex flex-col min-h-dvh w-full mx-auto`}>
+      <body className={`${GeistSans.className} flex flex-col min-h-dvh w-full mx-auto `}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Navbar className="flex-shrink-0" />
           <main className="flex-grow flex flex-col max-w-7xl mx-auto my-auto items-center justify-center">

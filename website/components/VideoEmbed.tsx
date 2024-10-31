@@ -1,6 +1,5 @@
 import type React from 'react';
 import { useState } from 'react';
-import { Youtube } from 'lucide-react';
 import Image from 'next/image';
 
 const VideoEmbed: React.FC = () => {
@@ -31,13 +30,14 @@ const VideoEmbed: React.FC = () => {
               priority
             />
             <div 
-              className="absolute inset-0 flex items-center justify-center bg-black/20 
-                group-hover:bg-black/30 transition-all duration-200 rounded-lg"
+              className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all duration-200 rounded-lg"
             >
-              <Youtube 
-                className="w-16 h-16 text-[#ff0000] opacity-90               
-                  group-hover:opacity-100 group-hover:scale-105 
-                  transition-all duration-200" 
+              <Image
+                src="/youtube_logo.svg"
+                alt="Play button"
+                height={50}
+                width={50}
+                priority
               />
             </div>
           </div>
@@ -47,7 +47,7 @@ const VideoEmbed: React.FC = () => {
           className="absolute inset-0 w-full h-full rounded-lg"
           src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
           title="TrackJobs Demo Video"
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
       )}
