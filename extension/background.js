@@ -1,7 +1,11 @@
 let userInfo = null;
+const local = 'http://localhost:3000';
+// const baseURL = 'https://trackjobs.online';
+const baseURL = local;
+const API_URL = `${baseURL}/api`;
 
 function checkAuthStatus() {
-  fetch('https://trackjobs.online/api/check-auth', {
+  fetch(`${API_URL}/check-auth`, {
     method: 'GET',
     credentials: 'include'
   })
@@ -41,7 +45,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 function sendJobData(content, url, action, sendResponse) {
-  fetch('https://trackjobs.online/api/jobs', {
+  fetch(`${API_URL}/jobs`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -79,4 +83,3 @@ chrome.action.onClicked.addListener((tab) => {
       files: ['content.js']
     });
 });
-

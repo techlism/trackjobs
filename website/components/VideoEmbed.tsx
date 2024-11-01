@@ -27,7 +27,7 @@ const VideoEmbed: React.FC = () => {
               fill
               className="object-cover rounded-lg"
               onError={() => setThumbnailError(true)}
-              priority
+              loading='lazy'
             />
             <div 
               className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all duration-200 rounded-lg"
@@ -37,7 +37,7 @@ const VideoEmbed: React.FC = () => {
                 alt="Play button"
                 height={50}
                 width={50}
-                priority
+                priority              
               />
             </div>
           </div>
