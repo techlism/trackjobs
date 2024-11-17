@@ -5,6 +5,7 @@ import { GeistMono } from 'geist/font/mono';
 import { ThemeProvider } from "next-themes";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   title: "TrackJobs",
@@ -30,6 +31,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className={`${GeistSans.className} flex flex-col min-h-dvh w-full mx-auto `}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
@@ -37,6 +39,7 @@ export default function RootLayout({
           <main className="flex-grow flex flex-col max-w-7xl mx-auto my-auto items-center justify-center">
             {children}
           </main>
+          <Toaster />
           <Footer className="flex-shrink-0" />
         </ThemeProvider>
       </body>

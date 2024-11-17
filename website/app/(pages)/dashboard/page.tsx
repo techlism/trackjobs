@@ -1,6 +1,6 @@
 import { validateRequest } from "@/lib/lucia";
 import SignOutButton from '@/components/SignOut';
-import { KanbanBoard } from '@/components/KanbanBoard';
+import { KanbanBoard } from '@/components/dashboard/KanbanBoard';
 import { fetchAllJobs } from './action';
 import type { Job } from '@/lib/types'; 
 

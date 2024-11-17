@@ -1,10 +1,9 @@
 "use client";
 
 import type React from "react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { Job, JobStatus } from "@/lib/types";
 import { JobStatusValues } from "@/lib/types";
-import { useToast } from "@/hooks/use-toast";
 import { KanbanColumn } from "./KanbanColumn";
 import { useJobs } from "@/hooks/useJobs";
 import {
@@ -13,7 +12,7 @@ import {
 	TabsList,
 	TabsTrigger,
   } from "@/components/ui/tabs"
-
+  import { toast } from "sonner";
 import { SingleColumnView } from "./SingleColumnView";
 import { useRouter } from "next/navigation";
 import {
@@ -31,7 +30,6 @@ export const KanbanBoard: React.FC<{ initialJobs: Job[] }> = ({
 	initialJobs,
 }) => {
 	const { jobs, moveJob, editJob, removeJob } = useJobs(initialJobs);
-	const { toast } = useToast();
 	const router = useRouter();
 	const handleAction = async (		
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -43,21 +41,18 @@ export const KanbanBoard: React.FC<{ initialJobs: Job[] }> = ({
 			const result = await action();
 			const parsedResult = JSON.parse(result);
 			if (typeof parsedResult === "object" && "error" in parsedResult) {
-				toast({
-					title: "Error",
-					description: parsedResult.error,
-					variant: "destructive",
+				toast.error(parsedResult.error, {
+					action : {
+						label : "Dismiss",
+						onClick : () => toast.dismiss
+					}
 				});
 				return null;
 			}
-			toast({ title: "Success", description: successMessage });
+			toast.success("Success" , {description: successMessage });
 			return parsedResult;
 		} catch (error) {
-			toast({
-				title: "Error",
-				description: errorMessage,
-				variant: "destructive",
-			});
+			toast("Error", {description: errorMessage });
 			return null;
 		}
 	};

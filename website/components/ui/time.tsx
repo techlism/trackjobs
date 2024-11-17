@@ -15,13 +15,13 @@ export function TimePicker({ date, setDate }: TimePickerProps) {
 
   const handleHourChange = (hour: string) => {
     const newDate = new Date(date)
-    newDate.setHours(parseInt(hour))
+    newDate.setHours(Number.parseInt(hour))
     setDate(newDate)
   }
 
   const handleMinuteChange = (minute: string) => {
     const newDate = new Date(date)
-    newDate.setMinutes(parseInt(minute))
+    newDate.setMinutes(Number.parseInt(minute))
     setDate(newDate)
   }
 

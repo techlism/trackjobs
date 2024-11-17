@@ -1,7 +1,7 @@
 "use client";
 import type React from "react";
 import type { Job, JobStatus as JobStatusType } from "@/lib/types";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,21 +10,21 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from "./ui/dialog";
+} from "../ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+} from "../ui/select";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { JobStatusValues } from "@/lib/types";
 import Link from "next/link";
 import { Expand } from "lucide-react";
-import { Separator } from "./ui/separator";
+import { Separator } from "../ui/separator";
 
-type IndividualColumnProps = {
+type KanbanColumnProps = {
   status: JobStatusType;
   jobs: Job[];
   onMoveJob: (jobId: string, newStatus: JobStatusType) => void;
@@ -46,7 +46,7 @@ const colorBasedOnStatus = (status: JobStatusType, type: 'background' | 'text' |
 
     return colors[status][type];
 }
-export const IndividualColumn: React.FC<IndividualColumnProps> = ({
+export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   status,
   jobs,
   onMoveJob,
@@ -54,16 +54,16 @@ export const IndividualColumn: React.FC<IndividualColumnProps> = ({
   onDeleteJob,
 }) => {
   return (
-    <div className={`rounded-lg shadow-md ${colorBasedOnStatus(status, 'background')} min-w-[250px] mx-auto sm:min-w-[350px] md:min-w-[450px] lg:min-w-[550px] xl:min-w-[750px]`}>
+    <div className={`rounded-lg shadow-sm ${colorBasedOnStatus(status, 'background')}`}>
       <div className="flex items-center justify-between p-2.5">
         <h3 className={`text-xl font-bold ${colorBasedOnStatus(status, 'text')}`}>{status}</h3>
         <div className={`text-lg font-medium ${colorBasedOnStatus(status, 'text')}`}>{jobs.length}</div>
       </div>
       <Separator className={`${colorBasedOnStatus(status, 'separator')} my-2 `} />
-      <ScrollArea className="h-[55dvh] px-2">
+      <ScrollArea className="h-[250px] px-2">
         <ScrollBar className={`${colorBasedOnStatus(status, 'scrollBar')}`} />
         {jobs.map((job) => (
-          <div key={job.id} className={"mb-2 mx-2 max-w-[99.8%] hover:scale-[1.02] transition-all duration-150 hover:rounded-md hover:shadow-sm"}>
+          <div key={job.id} className={"mb-2 mx-1.5 max-w-[99.8%] hover:scale-[1.04] transition-all duration-150 hover:rounded-md hover:shadow-sm"}>
             <div className={`flex justify-between items-center rounded-md p-2 ${colorBasedOnStatus(status, 'card')} `}>
               <div className="font-medium max-w-[95%] grid grid-cols-1 text-wrap">
                 <h4 className={`${colorBasedOnStatus(status, 'text')} text-base`}>{job.role}</h4>
@@ -95,7 +95,7 @@ export const IndividualColumn: React.FC<IndividualColumnProps> = ({
                     <div className="space-y-1">
                       <p className="font-semibold text-lg">Status</p>
                       <Select onValueChange={(newStatus) => onMoveJob(job.id || "", newStatus as JobStatusType)}>
-                        <SelectTrigger id="job-status" className="focus:ring-0">
+                        <SelectTrigger id="job-status" className="focus:ring-0 font-medium">
                           <SelectValue placeholder={job.currentStatus} className="font-medium"/>
                         </SelectTrigger>
                         <SelectContent className="font-medium">
