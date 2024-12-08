@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   try {
     const { content, url, jobStatus } : { content: string, url: string, jobStatus: JobStatus } = await req.json();
     if(!content || !url || !jobStatus) {
-        console.log("Invalid request", { content, url, jobStatus });
+        // console.log("Invalid request", { content, url, jobStatus });
         return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
     const { session } = await validateRequest();
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
 
     const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
+        messages: [{ role: "system", content: prompt }],
       });
       
       const rawContent = completion.choices[0].message.content || '';

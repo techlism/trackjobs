@@ -1,7 +1,7 @@
-import { EditJobForm } from "@/components/EditJobForm";
 import { fetchJobData } from "../../action";
 import { redirect } from "next/navigation";
 import type { Job } from "@/lib/types";
+import { EditJobForm } from '@/components/job-tracker/EditJobForm';
 
 export default async function Page({ params }: { params: { job_id: string } }) {
   const { job_id } = params;

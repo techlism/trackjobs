@@ -50,9 +50,9 @@ export default function LandingPage() {
 					>
 						<Link
 							href="/sign-up"
-							className="bg-primary text-white p-4 rounded-md hover:bg-primary/95 font-semibold hover:shadow-md hover:shadow-primary hover:rounded-md transition-all duration-200"
+							className="bg-primary text-white p-4 rounded-md hover:bg-primary/95 font-semibold hover:shadow-sm hover:shadow-primary hover:rounded-md transition-all duration-200"
 						>
-							Get Started for Free
+							Start Streamlining Your Job Hunt -&gt;
 						</Link>
 					</motion.div>
 				</div>
