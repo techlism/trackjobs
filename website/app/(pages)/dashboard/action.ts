@@ -7,7 +7,7 @@ import { validateRequest } from "@/lib/lucia";
 import { jobTable } from "@/lib/database/schema";
 import type { Job } from "@/lib/types";
 import { decrypt } from '@/lib/encryption/decryptor';
-import { encrypt } from '../../../lib/encryption/encryptor';
+import { encrypt } from '@/lib/encryption/encryptor';
 
 // implement logger
 const logger = {
@@ -142,5 +142,24 @@ export async function fetchJobData(jobId: string): Promise<string> {
     }
 }
 
-
-
+export async function fetchGeneratedResumes() {
+    try {
+        const userId = await getUserIdFromSession();
+        if(!userId) return {error : "User not found"};
+        const generatedResumes = await db.query.generatedResumeTable.findMany({
+            where: (table) => eq(table.userId, userId),
+            columns: {
+                id:true,
+                resumeId : true,
+                createdAt : true,
+                resumeTitle : true,
+                jobId : true,
+            }
+        });
+        if(!generatedResumes) return {error : "No generated resumes found"};
+        return {data : generatedResumes};
+    } catch (error) {
+        if(error instanceof Error) return {error : error.message};
+        return {error : "Error in fetching generated resumes"};
+    }
+}

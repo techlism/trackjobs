@@ -30,7 +30,7 @@ import type {
 	SectionFieldType,
 } from "@/lib/types";
 
-export function CustomSectionDialog({
+export function CustomSectionCreationDialog({
 	onAddSection,
 }: {
 	onAddSection: (section: SectionConfig) => void;
@@ -111,9 +111,9 @@ export function CustomSectionDialog({
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button variant="outline">
+				<Button variant="outline" type="button">
 					<Plus className="h-4 w-4 mr-2" />
-					Create Custom Section
+					Create a Custom Section
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="max-w-3xl max-h-[80vh]">
@@ -211,6 +211,7 @@ export function CustomSectionDialog({
 											<Button
 												variant="destructive"
 												size="sm"
+												type="button"
 												onClick={() => handleRemoveField(index)}
 												className="mt-4"
 											>
@@ -225,6 +226,7 @@ export function CustomSectionDialog({
 								variant="outline"
 								onClick={handleAddField}
 								className="w-full"
+								type="button"
 							>
 								<Plus className="h-4 w-4 mr-2" />
 								Add Field
@@ -232,6 +234,7 @@ export function CustomSectionDialog({
 						</div>
 						<Button
 							onClick={handleSubmit}
+							type="button"
 							disabled={!sectionTitle || fields.some((f) => !f.label)}
 							className="w-full"
 						>

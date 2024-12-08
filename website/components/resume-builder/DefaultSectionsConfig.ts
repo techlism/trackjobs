@@ -104,6 +104,13 @@ export const predefinedSectionConfigs: Record<string, SectionConfig> = {
                 placeholder: "Enter project name e.g. Portfolio Website",
             },
             {
+                name : "techstack",
+                label: "Tech Stack or Tools Used",
+                type: "text" as SectionFieldType,
+                fullWidth: true,
+                required: true,
+            },
+            {
                 name: "description",
                 label: "Description",
                 type: "textarea" as SectionFieldType,

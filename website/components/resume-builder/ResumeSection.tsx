@@ -17,14 +17,17 @@ import { cn } from "@/utils/utils";
 import {
 	type SectionField,
 	type SectionItemData,
+	type SectionFieldData,
 	SectionFieldType,
 } from "@/lib/types";
 import { MonthYearSelect } from "../ui/month-year-select";
+import React from "react";
 
+// ResumeSection.tsx
 interface SectionProps {
 	title: string;
 	description?: string;
-	fields: SectionField[];
+	fields: SectionFieldData[];
 	values: SectionItemData[];
 	onChange: (values: SectionItemData[]) => void;
 	canAddMore?: boolean;
@@ -33,7 +36,7 @@ interface SectionProps {
 	onRemoveSection?: () => void;
 }
 
-export function Section({
+export const Section =  React.memo(function Section({
 	title,
 	description,
 	fields,
@@ -44,7 +47,7 @@ export function Section({
 	maxItems = 10,
 	onRemoveSection,
 }: SectionProps) {
-	const [isExpanded, setIsExpanded] = useState(true);
+	const [isExpanded, setIsExpanded] = useState(false);
 	const [touchedFields, setTouchedFields] = useState<
 		Record<string, Record<string, boolean>>
 	>({});
@@ -62,7 +65,7 @@ export function Section({
 	const isFieldInvalid = (
 		itemId: string,
 		field: SectionField,
-		value: unknown,
+		value: string | string[] | Record<string, string> | unknown,
 	) => {
 		const isTouched = touchedFields[itemId]?.[field.name];
 		if (!field.required || !isTouched) return false;
@@ -81,21 +84,19 @@ export function Section({
 
 	const handleAddItem = () => {
 		if (values.length >= maxItems) return;
+
 		const newItem: SectionItemData = {
 			id: crypto.randomUUID(),
-			fields: fields.reduce(
-				(acc, field) => {
-					acc[field.name] =
-							field.type === "link" ||
-									field.type === "text" ||
-									field.type === "textarea"
-								? ""
-								: "";
-					return acc;
-				},
-				{} as SectionItemData["fields"],
-			),
+			sectionId: values[0]?.sectionId || "",
+			displayOrder: values.length,
+			fieldValues: fields.map((field) => ({
+				id: crypto.randomUUID(),
+				sectionItemId: "", // Will be set when saved
+				fieldId: field.id || "", // Ensure fieldId is a string
+				value: "",
+			})),
 		};
+
 		onChange([...values, newItem]);
 	};
 
@@ -104,40 +105,36 @@ export function Section({
 		onChange(values.filter((_, i) => i !== index));
 	};
 
-	const handleFieldChange = (
-		index: number,
-		fieldName: string,
-		value: string | string[] | { value: string | string[]; type: "date" | "text" | "textarea" | "link"},
-	) => {
-		const newValues = values.map((item, i) =>
-			i === index
-				? {
-						...item,
-						fields: {
-							...item.fields,
-							[fieldName]: value,
-						},
-					}
-				: item,
-		);
+	const handleFieldChange = (index: number, fieldId: string, value: string) => {
+		const newValues = values.map((item, i) => {
+			if (i !== index) return item;
+
+			return {
+				...item,
+				fieldValues: (item.fieldValues || []).map((fv) =>
+					fv.fieldId === fieldId ? { ...fv, value } : fv,
+				),
+			};
+		});
+
 		onChange(newValues);
 	};
 
 	const renderField = (
 		item: SectionItemData,
 		index: number,
-		field: SectionField,
+		field: SectionFieldData,
 	) => {
-		const value = item.fields[field.name];
-		const isInvalid = isFieldInvalid(item.id, field, value);
+		const fieldValue =
+			item.fieldValues?.find((fv) => fv.fieldId === field.id)?.value || "";
+		const isInvalid = isFieldInvalid(item.id, field, fieldValue);
 
 		return (
 			<div
-				key={`${item.id}-${field.name}`}
+				key={`${item.id}-${field.id}`}
 				className={cn(
-					field.fullWidth
-						? "lg:col-span-2 md:col-span-2 sm:col-span-2 col-span-1"
-						: "col-span-1",
+					"col-span-1 sm:col-span-2 md:col-span-1",
+					field.fullWidth && "md:col-span-2",
 				)}
 			>
 				<Label>
@@ -147,42 +144,43 @@ export function Section({
 				<div className="relative">
 					{field.type === "textarea" ? (
 						<Textarea
-							placeholder={field.placeholder}
-							value={value as string}
+							value={fieldValue}
 							onChange={(e) =>
-								handleFieldChange(index, field.name, e.target.value)
+								handleFieldChange(index, field.id || "", e.target.value)
 							}
-							onBlur={() => markFieldAsTouched(item.id, field.name)}
-							className={isInvalid ? "border-red-500 focus:ring-red-500" : ""}
+							onBlur={() => markFieldAsTouched(item.id, field.id || "")}
+							placeholder={field.placeholder}
+							className={isInvalid ? "border-red-500" : ""}
 						/>
 					) : field.type === "date" ? (
 						<MonthYearSelect
-							value={value as string}
-							onChange={(date) =>handleFieldChange(index, field.name, date)}
+							value={fieldValue}
+							onChange={(value) =>
+								handleFieldChange(index, field.id || "", value)
+							}
+							className="w-full"
 						/>
 					) : (
 						<Input
 							type={field.type === "link" ? "url" : "text"}
-							placeholder={field.placeholder}
-							value={value as string}
+							value={fieldValue}
 							onChange={(e) =>
-								handleFieldChange(index, field.name, e.target.value)
+								handleFieldChange(index, field.id || "", e.target.value)
 							}
-							onBlur={() => markFieldAsTouched(item.id, field.name)}
-							className={isInvalid ? "border-red-500 focus:ring-red-500" : ""}
+							onBlur={() => markFieldAsTouched(item.id, field.id || "")}
+							placeholder={field.placeholder}
+							className={isInvalid ? "border-red-500" : ""}
 						/>
 					)}
 					{isInvalid && (
 						<div className="absolute inset-y-0 right-0 pr-3 flex items-center">
 							<TooltipProvider>
-							<Tooltip>
-								<TooltipTrigger asChild>
-									<AlertCircle className="h-4 w-4 text-red-500" />
-								</TooltipTrigger>
-								<TooltipContent>
-									<p>This field is required.</p>
-								</TooltipContent>
-							</Tooltip>
+								<Tooltip>
+									<TooltipTrigger>
+										<AlertCircle className="h-4 w-4 text-red-500" />
+									</TooltipTrigger>
+									<TooltipContent>This field is required</TooltipContent>
+								</Tooltip>
 							</TooltipProvider>
 						</div>
 					)}
@@ -204,6 +202,8 @@ export function Section({
 					<Button
 						variant="ghost"
 						size="icon"
+						type="button"
+						className="text-primary hover:text-primary hover:border-primary hover:border hover:bg-transparent hover:shadow-sm transition-all"
 						onClick={() => setIsExpanded(!isExpanded)}
 						aria-label={isExpanded ? "Collapse" : "Expand"}
 					>
@@ -217,6 +217,7 @@ export function Section({
 						<Button
 							variant="ghost"
 							size="icon"
+							type="button"
 							onClick={onRemoveSection}
 							className="text-destructive hover:border-destructive hover:border hover:bg-transparent hover:text-destructive hover:shadow-sm transition-all"
 							aria-label="Remove Section"
@@ -245,6 +246,7 @@ export function Section({
 										<Button
 											variant="ghost"
 											size="icon"
+											type="button"
 											onClick={() => handleRemoveItem(index)}
 											className="absolute top-2 right-2 text-destructive"
 											aria-label="Remove Item"
@@ -252,7 +254,7 @@ export function Section({
 											<Trash className="h-4 w-4" />
 										</Button>
 									)}
-									<div className="grid grid-cols-2 gap-4">
+									<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 										{fields.map((field) => renderField(item, index, field))}
 									</div>
 								</div>
@@ -263,6 +265,7 @@ export function Section({
 									size="sm"
 									onClick={handleAddItem}
 									className="w-full"
+									type="button"
 								>
 									<Plus className="h-4 w-4 mr-2" />
 									Add {title}
@@ -274,4 +277,4 @@ export function Section({
 			</AnimatePresence>
 		</Card>
 	);
-}
+});

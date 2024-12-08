@@ -219,7 +219,7 @@ export const verifyOTPForSignup = async (userId: string, otp: string): Promise<A
 
         const isOTPExpired = Date.now() - Number(verificationEntry.sentAt) > 300000 // 5 minutes
         
-        console.log(isOTPExpired);
+        // console.log(isOTPExpired);
         
         if (isOTPExpired) {
             return { success: false, message: "OTP has expired" }
