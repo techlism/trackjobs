@@ -5,14 +5,15 @@ import { ServerHTMLJSONConverter } from 'html-json-converter/server';
 import { NextResponse, type NextRequest } from "next/server";
 import type { ResumeData } from "@/lib/types";
 import type { HTMLNode } from "@/lib/resume-data-to-json";
-import puppeteer, {type Browser} from 'puppeteer';
+import puppeteer, { type Browser } from 'puppeteer';
 import { convertResumeToHTMLNodes } from "@/lib/resume-data-to-json";
 import puppeteerCore, { type Browser as BrowserCore } from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
-export interface ResumeStyle {
+interface ResumeStyle {
     fontFamily: string;
     fontSize: {
         h1: string;
@@ -172,21 +173,19 @@ export async function GET(request: NextRequest) {
             }
         );
         let browser: Browser | BrowserCore;
-        if(process.env.VERCEL_ENV === 'production') {
-            const executablePath = await chromium.executablePath();
+        if (process.env.VERCEL_ENV === 'production') {
+            const executablePath = await chromium.executablePath()
             browser = await puppeteerCore.launch({
                 executablePath,
-                args: [
-                    ...chromium.args,
-                    '--font-render-hinting=none',
-                ],
+                args: chromium.args,
                 headless: chromium.headless,
-            });
-        }
-        else {
+                defaultViewport: chromium.defaultViewport
+            })
+        } else {
             browser = await puppeteer.launch({
                 headless: true,
-            });
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+            })
         }
         const page = await browser.newPage();
 
