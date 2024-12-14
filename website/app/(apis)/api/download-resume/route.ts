@@ -8,7 +8,7 @@ import type { HTMLNode } from "@/lib/resume-data-to-json";
 import puppeteer, { type Browser } from 'puppeteer';
 import { convertResumeToHTMLNodes } from "@/lib/resume-data-to-json";
 import puppeteerCore, { type Browser as BrowserCore } from 'puppeteer-core';
-import chromium from '@sparticuz/chromium';
+import chromium from '@sparticuz/chromium-min';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -173,8 +173,9 @@ export async function GET(request: NextRequest) {
             }
         );
         let browser: Browser | BrowserCore;
-        if (process.env.NODE_ENV === 'production') {
-            const executablePath = await chromium.executablePath()
+        if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
+            console.trace('Using Puppeteer Core for production');
+            const executablePath = await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar')
             browser = await puppeteerCore.launch({
                 executablePath,
                 args: chromium.args,
