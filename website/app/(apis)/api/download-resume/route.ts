@@ -173,7 +173,7 @@ export async function GET(request: NextRequest) {
             }
         );
         let browser: Browser | BrowserCore;
-        if (process.env.VERCEL_ENV === 'production') {
+        if (process.env.NODE_ENV === 'production') {
             const executablePath = await chromium.executablePath()
             browser = await puppeteerCore.launch({
                 executablePath,
