@@ -5,8 +5,12 @@ import { ServerHTMLJSONConverter } from 'html-json-converter/server';
 import { NextResponse, type NextRequest } from "next/server";
 import type { ResumeData } from "@/lib/types";
 import type { HTMLNode } from "@/lib/resume-data-to-json";
-import puppeteer from 'puppeteer';
+import puppeteer, {type Browser} from 'puppeteer';
 import { convertResumeToHTMLNodes } from "@/lib/resume-data-to-json";
+import puppeteerCore, { type Browser as BrowserCore } from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
+
+export const dynamic = 'force-dynamic';
 
 export interface ResumeStyle {
     fontFamily: string;
@@ -167,10 +171,23 @@ export async function GET(request: NextRequest) {
                 ]
             }
         );
-
-        const browser = await puppeteer.launch({
-            headless: true,
-        });
+        let browser: Browser | BrowserCore;
+        if(process.env.VERCEL_ENV === 'production') {
+            const executablePath = await chromium.executablePath();
+            browser = await puppeteerCore.launch({
+                executablePath,
+                args: [
+                    ...chromium.args,
+                    '--font-render-hinting=none',
+                ],
+                headless: chromium.headless,
+            });
+        }
+        else {
+            browser = await puppeteer.launch({
+                headless: true,
+            });
+        }
         const page = await browser.newPage();
 
         await page.setContent(finalHTML, {

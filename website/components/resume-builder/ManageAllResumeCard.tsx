@@ -77,12 +77,20 @@ export default function ResumeManager({
             );
 
             if (!response.ok) throw new Error("Download failed");
-
+            const contentDisposition = response.headers.get("Content-Disposition");
+            let fileName = `Resume ${generatedResumeId}.pdf`;
+            if (contentDisposition) {
+                const matches = /filename=([^;]+)/g.exec(contentDisposition);
+                if (matches?.[1]) {
+                    fileName = matches[1].replace(/["']/g, '');
+                    fileName = decodeURIComponent(fileName);
+                }
+            }            
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
-            link.download = "resume.pdf";
+            link.download = fileName;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
