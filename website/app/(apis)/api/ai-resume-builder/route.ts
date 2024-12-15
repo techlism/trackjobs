@@ -244,6 +244,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Failed to parse resume correctly" }, { status: 500 });
 
     } catch (error) {
+        console.trace('Error in generating resume:', error);
         return NextResponse.json(
             { error: "Internal server error" },
             { status: 500 }
