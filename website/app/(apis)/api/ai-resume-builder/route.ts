@@ -11,6 +11,9 @@ import { generatedResumeTable } from '../../../../lib/database/schema';
 import generatePromptString from "./prompt-string";
 import { revalidatePath } from "next/cache";
 
+export const maxDuration = 60;
+
+
 type JobResponse =
     | { success: true; data: Job }
     | { success: false; error: string };
