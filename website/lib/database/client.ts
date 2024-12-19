@@ -1,7 +1,6 @@
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import * as schema from "./schema";
-import * as relation from "./relations";
 
 const client = createClient({
   // biome-ignore lint/style/noNonNullAssertion: <It will be supplied in all cases>
@@ -10,6 +9,6 @@ const client = createClient({
   authToken: process.env.DATABASE_AUTH_TOKEN!,
 });
 
-const db = drizzle(client, { schema : {...schema, ...relation} });
+const db = drizzle(client, { schema : {...schema} });
 
 export default db;

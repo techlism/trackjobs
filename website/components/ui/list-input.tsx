@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils";
 
 interface ListInputProps {
 	value: string[];

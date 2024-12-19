@@ -17,3 +17,12 @@ export const formatZodErrors = (error: ZodError) => {
     return acc;
   }, {} as Record<string, string[]>);
 };
+
+export function generateRandomId() {
+  const randomPart = Array.from(crypto.getRandomValues(new Uint8Array(4)))
+    .map(b => b.toString(36))
+    .join('')
+    .substring(0, 4);
+  const timestampPart = Date.now().toString().slice(-6);
+  return randomPart + timestampPart;
+}

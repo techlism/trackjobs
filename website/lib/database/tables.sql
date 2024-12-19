@@ -128,17 +128,29 @@ CREATE INDEX idx_item_display_order ON resume_section_item(display_order);
 -- Generated Resume Table
 CREATE TABLE generated_resume (
     id TEXT PRIMARY KEY,
-    resume_id TEXT NOT NULL,
+    manual_resume_id TEXT NOT NULL,
     user_id TEXT NOT NULL,
     resume_title TEXT NOT NULL,
     resume_content TEXT NOT NULL,
     job_id TEXT NOT NULL,
     created_at INTEGER NOT NULL DEFAULT (unixepoch()),
     updated_at INTEGER NOT NULL DEFAULT (unixepoch()),
-    FOREIGN KEY (resume_id) REFERENCES resume(id),
+    FOREIGN KEY (manual_resume_id) REFERENCES manual_resume(id),
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (job_id) REFERENCES job_details(id)
 );
+
+CREATE TABLE manual_resume (
+  id TEXT PRIMARY KEY DEFAULT (HEX(RANDOMBLOB(8))),
+  user_id TEXT NOT NULL,
+  resume_title TEXT NOT NULL,
+  resume_content TEXT NOT NULL,
+  created_at INTEGER NOT NULL DEFAULT (unixepoch()),
+  updated_at INTEGER NOT NULL DEFAULT (unixepoch()),
+  FOREIGN KEY (user_id) REFERENCES user(id)
+)
+
+CREATE INDEX idx_manual_resume_user ON manual_resume(user_id);
 
 -- Generated Resume Count Table
 CREATE TABLE generated_resume_count (
@@ -155,7 +167,7 @@ CREATE INDEX idx_generated_resume_user ON generated_resume(user_id);
 CREATE INDEX idx_generated_resume_job ON generated_resume(job_id);
 
 CREATE TABLE job_details (
-    id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(8)))),
     user_id TEXT NOT NULL,
     role TEXT NOT NULL,
     company_name TEXT NOT NULL,

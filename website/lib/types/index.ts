@@ -1,5 +1,4 @@
 import { z } from "zod"
-import type { Resume, ResumeSection, ResumeSectionField, ResumeSectionItem, ResumeSectionFieldValue } from "../database/schema";
 export const SignUpSchema = z
 	.object({
 		email: z.string().email({ message: "Invalid email address" }),
@@ -141,8 +140,9 @@ export const SectionSchema = z.object({
 
 // Main Resume Schema aligned with DB schema
 export const ResumeSchema = z.object({
-	id: z.string().optional(),
-	userId: z.string().optional(),
+	// The UserId and ResumeId is not required inside the ResumeSchema as it will be handled and added by the server when saving to the database
+	// id: z.string().optional(),
+	// userId: z.string().optional(),
 	resumeTitle: z.string().default(`Resume - ${new Date().toLocaleDateString()}`),
 	fullName: z.string().min(1, "Full name is required"),
 	email: z.string().email("Invalid email"),
@@ -163,16 +163,6 @@ export type SectionItemData = z.infer<typeof SectionItemSchema>;
 export type SectionFieldData = z.infer<typeof SectionFieldSchema>;
 export type SectionFieldValueData = z.infer<typeof SectionFieldValueSchema>;
 
-export interface DbResumeWithRelations extends Resume {
-	sections: (ResumeSection & {
-		fields: ResumeSectionField[];
-		items: (ResumeSectionItem & {
-			fieldValues: (ResumeSectionFieldValue & {
-				field: ResumeSectionField;
-			})[];
-		})[];
-	})[];
-}
 
 export type ApiResponse<T> = {
 	data?: T;

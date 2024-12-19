@@ -1,7 +1,7 @@
 import Link from "next/link";
 import DarkModeSwitch from './DarkModeSwitch';
 import type { HTMLAttributes } from "react";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils";
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"

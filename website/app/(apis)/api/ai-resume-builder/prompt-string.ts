@@ -14,9 +14,9 @@ export default function generatePromptString(
     1. Fix grammatical errors in resume content
     2. Align resume with job description:
         - Match keywords in job description
-        - Adjust projects to 3-4 most relevant
-        - Ensure mentioned skills are reflected
-    	- Quantify work experiences if possible
+        - Adjust projects to 3-4 atmost relevant to the JOB Desciption.
+        - Ensure mentioned skills are reflected and key-word coverage is high.
+    	- Quantify work experiences and impact in projects or anywhere, if possible
     3. Constraints:
        	- Do not modify personal data section
        	- Preserve section titles

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Plus, Trash, AlertCircle, ChevronUp, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { cn } from "@/utils/utils";
+import { cn, generateRandomId } from "@/utils";
 import {
 	type SectionField,
 	type SectionItemData,
@@ -86,11 +86,11 @@ export const Section =  React.memo(function Section({
 		if (values.length >= maxItems) return;
 
 		const newItem: SectionItemData = {
-			id: crypto.randomUUID(),
+			id: generateRandomId(),
 			sectionId: values[0]?.sectionId || "",
 			displayOrder: values.length,
 			fieldValues: fields.map((field) => ({
-				id: crypto.randomUUID(),
+				id: generateRandomId(),
 				sectionItemId: "", // Will be set when saved
 				fieldId: field.id || "", // Ensure fieldId is a string
 				value: "",

@@ -29,6 +29,7 @@ import type {
 	SectionField,
 	SectionFieldType,
 } from "@/lib/types";
+import { generateRandomId } from "@/utils";
 
 export function CustomSectionCreationDialog({
 	onAddSection,
@@ -40,7 +41,7 @@ export function CustomSectionCreationDialog({
 	const [sectionDescription, setSectionDescription] = useState("");
 	const [fields, setFields] = useState<SectionField[]>([
 		{
-			id: crypto.randomUUID(),
+			id: generateRandomId(),
 			name: "",
 			label: "",
 			type: "text",
@@ -53,7 +54,7 @@ export function CustomSectionCreationDialog({
 		setFields([
 			...fields,
 			{
-				id: crypto.randomUUID(),
+				id: generateRandomId(),
 				name: "",
 				label: "",
 				type: "text",
@@ -85,7 +86,7 @@ export function CustomSectionCreationDialog({
 		setSectionDescription("");
 		setFields([
 			{
-				id: crypto.randomUUID(),
+				id: generateRandomId(),
 				name: "",
 				label: "",
 				type: "text",

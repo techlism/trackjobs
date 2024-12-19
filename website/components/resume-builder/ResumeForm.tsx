@@ -30,6 +30,7 @@ import {
 	saveResumeData,
 	updateResumeData,
 } from "@/app/(pages)/resume-builder/action";
+import { generateRandomId } from "@/utils";
 
 interface ResumeFormProps {
 	initialData?: ResumeData;
@@ -75,12 +76,12 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 		// If no initial data, create default sections
 		return Object.entries(predefinedSectionConfigs).map(
 			([key, config], idx) => {
-				const sectionId = crypto.randomUUID();
+				const sectionId = generateRandomId();
 				const fields: SectionFieldData[] = config.fields.map((
 					field,
 					index,
 				) => ({
-					id: crypto.randomUUID(),
+					id: generateRandomId(),
 					name: field.name,
 					label: field.label,
 					type: field.type,
@@ -91,7 +92,7 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 					displayOrder: index,
 				}));
 
-				const itemId = crypto.randomUUID();
+				const itemId = generateRandomId();
 
 				return {
 					id: sectionId,
@@ -109,7 +110,7 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 							sectionId: sectionId,
 							displayOrder: 0,
 							fieldValues: fields.map((field) => ({
-								id: crypto.randomUUID(),
+								id: generateRandomId(),
 								sectionItemId: itemId,
 								fieldId: field.id || "",
 								value: "",
@@ -170,10 +171,10 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 	// Handler for adding a custom section
 	const handleAddCustomSection = useCallback(
 		(sectionConfig: SectionConfig) => {
-			const newSectionId = crypto.randomUUID();
+			const newSectionId = generateRandomId();
 			const newFields: SectionFieldData[] = sectionConfig.fields.map(
 				(field, index) => ({
-					id: crypto.randomUUID(),
+					id: generateRandomId(),
 					name: field.name,
 					label: field.label,
 					type: field.type,
@@ -185,7 +186,7 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 				}),
 			);
 
-			const itemId = crypto.randomUUID();
+			const itemId = generateRandomId();
 
 			const newSection: SectionData = {
 				id: newSectionId,
@@ -203,7 +204,7 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 						sectionId: newSectionId,
 						displayOrder: 0,
 						fieldValues: newFields.map((field) => ({
-							id: crypto.randomUUID(),
+							id: generateRandomId(),
 							sectionItemId: itemId,
 							fieldId: field.id || "",
 							value: "",
@@ -225,12 +226,12 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 	}, []);
 
 	// Handle form submission
-	const onSubmit = useCallback(
+	const handleFormSubmit = useCallback(
 		async (e: React.FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
 			if (processing) return;
 			setProcessing(true);
-
+			// console.log("Form data", formData);
 			try {
 				const parsedData = ResumeSchema.safeParse(formData);
 
@@ -297,7 +298,7 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 			</CardHeader>
 			<CardContent>
 				<form
-					onSubmit={onSubmit}
+					onSubmit={handleFormSubmit}
 					className="xl:min-w-[750px] lg:min-w-[650px] md:min-w-[550px] font-medium"
 				>
 					<PersonalDetails
