@@ -28,7 +28,7 @@ const gemini = new OpenAI({
     baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
 });
 
-export async function fetchResumeData(
+async function fetchResumeData(
     resumeId: string
 ): Promise<ApiResponse<ResumeData>> {
     try {
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
         // console.log('Raw Response:', rawResponse);
         if (!parsedResponse) {
             return NextResponse.json({ error: "Failed to generate resume" }, { status: 500 });
-        }
+        }        
         // const jsonString = rawResponse.replace(/^```json\n|\n```$/g, '').trim();
         // const jsonData = JSON.parse(jsonString);
         // if (!jsonData) {
