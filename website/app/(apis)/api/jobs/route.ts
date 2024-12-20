@@ -16,7 +16,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const JobExtractionSchema = z.object({
+const JobExtractionSchema = z.object({
   isJobPosting: z.boolean(),
   role: z.string().optional(),
   company: z.string().optional(),
