@@ -18,9 +18,9 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
-import { Edit } from "lucide-react";
+import { Plus } from "lucide-react";
 import { ResumeContext } from "./ResumeContext";
+import { Button } from "../ui/button";
 
 interface KanbanBoardProps {
 	initialJobs: Job[];
@@ -130,12 +130,12 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
 	return (
 		<ResumeContext.Provider value={{ resumes, generatedResumes }}>
 			<Card className={className}>
-				<CardHeader className="mb-0 pb-3">
-					<CardTitle className="text-lg">
+				<CardHeader className="p-4">
+					<CardTitle className="text-xl font-semibold">
 						Your Applications
 					</CardTitle>
 				</CardHeader>
-				<CardContent className="px-3">
+				<CardContent className="p-4">
 					<Tabs defaultValue="At a Glance">
 						<TabsList>
 							<TabsTrigger value="Focused">Focused</TabsTrigger>
@@ -155,19 +155,20 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
 						</TabsContent>
 						<TabsContent value="At a Glance">
 							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 items-center">
-								{memoizedColumns}
+								{memoizedColumns} 
+								{/* This is nothing but memoized version of KanbanColumn */}
 							</div>
 						</TabsContent>
 					</Tabs>
 				</CardContent>
-				<CardFooter>
-					<Link
-						href={"dashboard/edit-job/add-new"}
-						className="hover:text-primary/80 p-2 rounded-lg border flex justify-between items-center gap-2 font-medium hover:shadow-sm hover:border-primary hover:border transition-all ease-in-out"
-					>
-						<Edit className="h-6 w-6" />
-						Add New Job
-					</Link>
+				<CardFooter className="p-4 pt-0">
+					<Button
+                        onClick={() => router.push("dashboard/edit-job/add-new")}
+                        className="h-9 max-w-fit"
+                    >
+						<Plus className="h-4 w-4 mr-2" />
+						Add a New Job
+					</Button>
 				</CardFooter>
 			</Card>
 		</ResumeContext.Provider>

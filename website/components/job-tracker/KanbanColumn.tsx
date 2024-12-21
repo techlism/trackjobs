@@ -231,40 +231,30 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 
 		try {
 			const response = await fetch(
-				`/api/download-resume?generated_resume_id=${generatedResumeId}`,
-				{
-					method: "GET",
-					headers: {
-						"Accept": "application/pdf",
-					},
-				},
-			);
+                `/api/download-resume?generated_resume_id=${generatedResumeId}`,
+                { method: "GET" },
+            );
 
-			if (!response.ok) {
-				throw new Error(response.statusText);
-			}
-			console.log(response);
-			// Get filename from header or use default
-			const contentDisposition = response.headers.get(
-				"content-disposition",
-			);
-			const filenameMatch = contentDisposition?.match(/filename="(.+)"/);
-			const filename = filenameMatch ? filenameMatch[1] : "resume.pdf";
-
-			const blob = await response.blob();
-			
-			const url = window.URL.createObjectURL(blob);
-			const a = document.createElement("a");
-			a.href = url;
-			a.download = filename;
-			document.body.appendChild(a);
-			a.click();
-			window.URL.revokeObjectURL(url);
-			a.remove();
-
-			toast.success("Success", {
-				description: "Resume downloaded successfully",
-			});
+            if (!response.ok) throw new Error("Download failed");
+            const contentDisposition = response.headers.get("Content-Disposition");
+            let fileName = `Resume ${generatedResumeId}.pdf`;
+            if (contentDisposition) {
+                const matches = /filename=([^;]+)/g.exec(contentDisposition);
+                if (matches?.[1]) {
+                    fileName = matches[1].replace(/["']/g, '');
+                    fileName = decodeURIComponent(fileName);
+                }
+            }            
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);			
+			toast.success("Resume downloaded successfully");
 		} catch (error) {
 			console.error("Error downloading resume:", error);
 			toast.error("Error", {
@@ -277,7 +267,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 
 	return (
 		<div
-			className={`rounded-lg shadow-sm ${
+			className={`rounded-md shadow-sm ${
 				colorBasedOnStatus(status, "background")
 			}`}
 		>
@@ -300,21 +290,21 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 			<Separator
 				className={`${colorBasedOnStatus(status, "separator")} my-2 `}
 			/>
-			<ScrollArea className="h-[250px] px-1.5">
+			<ScrollArea className="h-[270px] p-1.5">
 				<ScrollBar
 					className={`${colorBasedOnStatus(status, "scrollBar")}`}
 				/>
 				{jobs.map((job) => (
 					<div
 						key={job.id}
-						className={"mb-2 mx-1.5 max-w-[99.8%] hover:scale-[1.04] transition-all duration-150 hover:rounded-md hover:shadow-sm"}
+						className={"mb-2 mx-1.5 max-w-[99.7%] hover:scale-[1.03] transition-all duration-150 hover:rounded-md hover:shadow-sm border-border hover:border-border"}
 					>
 						<div
 							className={`flex justify-between items-center rounded-md p-2 ${
 								colorBasedOnStatus(status, "card")
 							} `}
 						>
-							<div className="font-medium max-w-[95%] grid grid-cols-1 text-wrap text-base">
+							<div className="font-medium max-w-[95%] grid grid-cols-1 text-wrap truncate text-base">
 								<h4
 									className={`${
 										colorBasedOnStatus(status, "text")
@@ -330,6 +320,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 									{job.companyName}
 								</p>
 							</div>
+							{/* Job Details and Resume Generator Dialog */}
 							<Dialog>
 								<DialogTrigger asChild>
 									<Button
@@ -532,8 +523,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 													: (
 														<>
 															<Wand2 className="mr-2 h-4 w-4" />
-															Create Optimized
-															Version
+															Create Optimized Version
 														</>
 													)}
 											</Button>

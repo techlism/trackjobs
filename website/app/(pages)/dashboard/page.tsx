@@ -54,8 +54,9 @@ export default async function Dashboard() {
 
   return (
     <main className="mx-auto flex justify-center items-center h-full w-full">
-      <Card className="my-6 mx-1">
-        <CardHeader className="py-4">
+      {/* This margin is required for vertical spacing */}
+      <Card className="my-6">         
+        <CardHeader className="p-4">
           <CardTitle className="text-xl md:text-2xl lg:text-2xl xl:text-2xl">
             Your Dashboard
           </CardTitle>
@@ -63,9 +64,9 @@ export default async function Dashboard() {
             Track your Job Applications and manage all Resumes right from here.
           </CardDescription>
         </CardHeader>
-        <Separator className="mb-4" />
-        <CardContent className="grid lg:grid-cols-12 grid-cols-1 gap-2 px-2">
-          <KanbanBoard initialJobs={initialJobs} resumes={validResumes} generatedResumes={generatedResumes} className="lg:col-span-9" />
+        <Separator />
+        <CardContent className="grid grid-cols-1 gap-4 p-4">
+          <KanbanBoard initialJobs={initialJobs} resumes={validResumes} generatedResumes={generatedResumes} />
           <ResumeManager initialResumes={validResumes} generatedResumes={generatedResumes} />
         </CardContent>
       </Card>

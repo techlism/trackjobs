@@ -36,7 +36,7 @@ const defaultStyle: HTMLNode = {
             margin-bottom: 0.25rem;
             border-bottom: 1px solid #e5e7eb;
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: 500;
             padding-bottom: 0.15rem;
         }
         nav {
@@ -59,8 +59,8 @@ const defaultStyle: HTMLNode = {
         .section-item > p.title:first-of-type + .description {
             & ~ p.title:first-of-type {
                 font-size: 0.85rem;
-                font-weight: 600;
-                margin-bottom: 0.3rem;
+                font-weight: 500;
+                margin-bottom: 0.35rem;
             }
         }
 
@@ -74,10 +74,34 @@ const defaultStyle: HTMLNode = {
             margin-bottom: 0.25rem;
         }
 
+        .section-item .description {
+            margin-left: 0.2rem;
+        }
+
         .section-item .description p {
             font-size: 0.82rem;
             margin-bottom: 0.25rem;            
         }
+
+        .section-item .description ul {
+            font-size: 0.82rem;
+            margin-bottom: 0.25rem;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .section-item .description ul li {
+            margin-bottom: 0.25rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .section-item .description ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+
         .date-container {
             position: absolute;
             right: 0;
@@ -90,6 +114,7 @@ const defaultStyle: HTMLNode = {
             overflow: hidden;
             white-space: nowrap;
         }
+            
         nav > * {
             margin: 0 0.25rem;
         }
@@ -302,16 +327,33 @@ function convertSectionItemToHTML(item: SectionItemData, section: SectionData): 
                 });
                 break;
             case 'textarea': {
-                const paragraphs: HTMLNode[] = value.split('\n').filter(Boolean).map(line => ({
-                    tag: 'p',
-                    attributes: { style: 'margin-left: 0.2rem' },
-                    children: [line]
-                }));
-                descriptionFields.push({
-                    tag: 'div',
-                    attributes: { class: 'description' },
-                    children: paragraphs
-                });
+                const lines = value.split('\n').filter(Boolean).map(line => line.trim());
+                
+                // If there's only one line, use a paragraph
+                if (lines.length === 1) {
+                    descriptionFields.push({
+                        tag: 'div',
+                        attributes: { class: 'description' },
+                        children: [{
+                            tag: 'p',
+                            children: [lines[0].match(/^[-•●∙◦]/) ? lines[0] : `• ${lines[0]}`]
+                        }]
+                    });
+                } else {
+                    // If there are multiple lines, use a list
+                    descriptionFields.push({
+                        tag: 'div',
+                        attributes: { class: 'description' },
+                        children: [{
+                            tag: 'ul',
+                            attributes : { style : 'margin-left: 0.1rem' },
+                            children: lines.map(line => ({
+                                tag: 'li',
+                                children: [line.replace(/^[-•●∙◦]\s*/, '')] // Remove existing bullets
+                            }))
+                        }]
+                    });
+                }
                 break;
             }
             case 'link':
