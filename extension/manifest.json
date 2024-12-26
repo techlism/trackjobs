@@ -1,12 +1,13 @@
 {
   "manifest_version": 3,
   "name": "TrackJobs_DEV",
-  "version": "1.0.2",
+  "version": "1.2.0",
   "description": "Track and manage your job applications with ease",
   "action": {
     "default_icon": {
       "48": "trackjobs_logo_48.png",
-      "128": "trackjobs_logo_128.png"
+      "128": "trackjobs_logo_128.png",
+      "256" : "trackjobs_logo_256.png"
     }
   },
   "permissions": [
@@ -30,12 +31,8 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["*.html"],
-      "matches": ["<all_urls>"]    
-    },
-    {
-      "resources" : ["*.png"],
-      "matches": ["<all_urls>"]
+      "resources": ["*.html","*.png", "fonts/*.ttf", "*.js"],
+      "matches": ["https://*/*"]    
     }
   ],
   "content_security_policy": {

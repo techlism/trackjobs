@@ -2,7 +2,6 @@ import { validateRequest } from "@/lib/lucia";
 import { Profile } from "@/components/Profile";
 import { redirect } from "next/navigation";
 import db from "@/lib/database/client";
-import { userTable } from "@/lib/database/schema";
 import { eq } from "drizzle-orm";
 
 async function getUserEmail(userId: string) {

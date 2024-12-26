@@ -6,57 +6,94 @@
 
 @layer base {
   :root {
+    /* Base colors */
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --foreground: 255 85% 5%;
+    
+    /* Card and Popover */
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 255 85% 5%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 255 90% 62%;
+    --popover-foreground: 255 85% 5%;
+    
+    /* Primary - using tolopea-600 as main brand color */
+    --primary: 255 96% 51%;  /* tolopea-600 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 255 90% 97%;
-    --secondary-foreground: 255 90% 62%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 255 90% 62%;
+    
+    /* Secondary - lighter variant */
+    --secondary: 241 100% 95%;  /* based on tolopea-100 */
+    --secondary-foreground: 255 96% 51%;  /* tolopea-600 */
+    
+    /* Muted */
+    --muted: 241 30% 95%;
+    --muted-foreground: 255 15% 40%;
+    
+    /* Accent */
+    --accent: 255 96% 51%;  /* tolopea-600 */
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
+    
+    /* Destructive */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    
+    /* Borders and Input */
+    --border: 241 30% 90%;
+    --input: 241 30% 90%;
+    --ring: 255 96% 51%;  /* tolopea-600 */
+    
+    /* Chart colors */
+    --chart-1: 255 96% 51%;  /* tolopea-600 */
+    --chart-2: 241 100% 75%;  /* tolopea-200 */
+    --chart-3: 255 100% 62%;  /* tolopea-400 */
+    --chart-4: 255 100% 40%;  /* tolopea-800 */
+    --chart-5: 252 85% 13%;  /* tolopea-950 */
+    
+    /* Other */
     --radius: 0.5rem;
   }
+
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 255 90% 62%;
+    /* Base colors */
+    --background: 252 85% 13%;  /* tolopea-950 */
+    --foreground: 241 100% 95%;  /* based on tolopea-100 */
+    
+    /* Card and Popover */
+    --card: 252 85% 13%;  /* tolopea-950 */
+    --card-foreground: 241 100% 95%;
+    --popover: 252 85% 13%;
+    --popover-foreground: 241 100% 95%;
+    
+    /* Primary */
+    --primary: 255 96% 51%;  /* tolopea-600 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 255 90% 15%;
-    --secondary-foreground: 255 90% 90%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 255 90% 62%;
+    
+    /* Secondary */
+    --secondary: 255 85% 20%;  /* darker variant */
+    --secondary-foreground: 241 100% 95%;
+    
+    /* Muted */
+    --muted: 252 50% 20%;
+    --muted-foreground: 241 30% 75%;
+    
+    /* Accent */
+    --accent: 255 96% 51%;  /* tolopea-600 */
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 45.6%;
+    
+    /* Destructive */
+    --destructive: 0 63% 46%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    
+    /* Borders and Input */
+    --border: 252 50% 20%;
+    --input: 252 50% 20%;
+    --ring: 255 96% 51%;
+    
+    /* Chart colors */
+    --chart-1: 241 100% 85%;  /* light */
+    --chart-2: 255 96% 51%;   /* medium */
+    --chart-3: 255 100% 40%;  /* dark */
+    --chart-4: 252 85% 25%;   /* darker */
+    --chart-5: 252 85% 13%;   /* darkest */
   }
 }
 
