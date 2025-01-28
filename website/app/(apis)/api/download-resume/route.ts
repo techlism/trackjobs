@@ -14,21 +14,36 @@ export async function GET(request: NextRequest) {
     try {
         const searchParams = request.nextUrl.searchParams;
         const generatedResumeID = searchParams.get("generated_resume_id");
-        if (!generatedResumeID) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-        const generatedResume = await db.query.generatedResumeTable.findFirst({
-            where: (table) => eq(table.id, generatedResumeID),
-            columns: {
-                resumeContent: true,
-                resumeTitle: true,
-            }
-        });
-        if (!generatedResume) return NextResponse.json({ error: "Resume not found" }, { status: 404 });
-        const resumeTitle = generatedResume.resumeTitle as string;
-        const resumeContent = generatedResume.resumeContent as string;
+        const manualResumeID = searchParams.get("manual_resume_id");
+        if (!generatedResumeID && !manualResumeID) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+        let fetchedResume  : { resumeContent : ResumeData , resumeTitle : string } | undefined;
+        if(generatedResumeID && !manualResumeID){
+            fetchedResume = await db.query.generatedResumeTable.findFirst({
+                where: (table) => eq(table.id, generatedResumeID),
+                columns: {
+                    resumeContent: true,
+                    resumeTitle: true,
+                }
+            });
+        }
+        if(manualResumeID && !generatedResumeID){
+            fetchedResume = await db.query.manualResumeTable.findFirst({
+                where: (table) => eq(table.id, manualResumeID),
+                columns: {
+                    resumeContent: true,
+                    resumeTitle: true,
+                }
+            });
+        }  
 
-        const parsedResumeContent: ResumeData = JSON.parse(resumeContent);
-        parsedResumeContent.resumeTitle = resumeTitle;
-        const finalHTML = generateFullHTML(parsedResumeContent);
+        if (!fetchedResume) return NextResponse.json({ error: "Resume not found" }, { status: 404 });
+        // console.log(fetchedResume);
+        const resumeTitle = fetchedResume.resumeTitle;
+        const resumeContent = fetchedResume.resumeContent;
+
+        // const parsedResumeContent: ResumeData = JSON.parse(resumeContent);
+        // parsedResumeContent.resumeTitle = resumeTitle;
+        const finalHTML = generateFullHTML(resumeContent);
         let browser: Browser | BrowserCore;
         if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
             // console.trace('Using Puppeteer Core for production');

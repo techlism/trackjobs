@@ -4,9 +4,6 @@ import type { ResumeData } from "../types";
 import { generateRandomId } from "@/utils";
 
 
-
-
-
 export const userTable = sqliteTable("user", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   email: text("email").unique().notNull(),
@@ -77,7 +74,7 @@ export const generatedResumeTable = sqliteTable('generated_resume', {
   resumeId: text('resume_id').notNull().references(() => manualResumeTable.id),
   userId: text('user_id').notNull().references(() => userTable.id),
   resumeTitle: text('resume_title').notNull(),
-  resumeContent: text('resume_content', { mode: 'json' }).notNull(),
+  resumeContent: text('resume_content', { mode: 'json' }).$type<ResumeData>().notNull(),
   jobId: text('job_id').notNull().references(() => jobTable.id),
   createdAt: integer('created_at').notNull().$defaultFn(() => Date.now()),
   updatedAt: integer('updated_at').notNull().$defaultFn(() => Date.now()),

@@ -1,4 +1,4 @@
-import { fetchJobData } from "../../action";
+import { fetchJobData } from "../../job-actions";
 import { redirect } from "next/navigation";
 import type { Job } from "@/lib/types";
 import { EditJobForm } from '@/components/job-tracker/EditJobForm';

@@ -1,7 +1,7 @@
+
 import { validateRequest } from "@/lib/lucia";
-import SignOutButton from "@/components/SignOut";
 import { KanbanBoard } from "@/components/job-tracker/KanbanBoard";
-import { fetchAllJobs, fetchGeneratedResumes } from "./action";
+import { fetchAllJobs } from "./job-actions";
 import type { Job } from "@/lib/types";
 import {
   Card,
@@ -12,12 +12,14 @@ import {
 } from "@/components/ui/card";
 import ResumeManager from "@/components/resume-builder/ManageAllResumeCard";
 import { Separator } from "@/components/ui/separator";
-import { fetchAllResumes } from "../resume-builder/action";
+import { fetchAllGeneratedResumes, fetchAllManualResumes } from "@/app/(pages)/resume-builder/resume-actions";
+
 export default async function Dashboard() {
   const { user } = await validateRequest();
+  
   if (!user) {
     return (
-      <div className="grid grid-cols-1 items-center p-4 border rounded-md gap-4 mx-auto max-w-96 ">
+      <div className="grid grid-cols-1 items-center p-4 border rounded-md gap-4 mx-auto max-w-96">
         <h1>Please sign in to access the dashboard</h1>
         <a href="/sign-in" className="p-4 border rounded-md">
           Sign-in
@@ -25,37 +27,43 @@ export default async function Dashboard() {
       </div>
     );
   }
-  const result = await fetchAllJobs();
-  const resumes = await fetchAllResumes();
-  let initialJobs = JSON.parse(result);
 
-  if (initialJobs.error || resumes.error || !resumes.data) {
+  // Fetch all data in parallel
+  const [jobsResult, manualResumesResult, generatedResumesResult] = await Promise.all([
+    fetchAllJobs(),
+    fetchAllManualResumes(),
+    fetchAllGeneratedResumes()
+  ]);
+
+  // Parse jobs data
+  let initialJobs: Job[] = [];
+  try {
+    initialJobs = JSON.parse(jobsResult);
+  } catch (error) {
+    console.error('Failed to parse jobs data:', error);
+  }
+
+  // Handle error cases
+  if (
+    !Array.isArray(initialJobs) || 
+    manualResumesResult.error || 
+    generatedResumesResult.error
+    || !manualResumesResult.data || !generatedResumesResult.data
+  ) {
     return (
       <div className="p-4 border rounded-lg">
         <h1 className="text-2xl font-bold mb-4">Your Dashboard</h1>
-        <p>
-          Unable to fetch data. Please try again later.
-        </p>
-        <p>{initialJobs.error}</p>
-        <p>{resumes.error}</p>
+        <p>Unable to fetch data. Please try again later.</p>
+        {!Array.isArray(initialJobs) && <p>Error loading jobs</p>}
+        {manualResumesResult.error && <p>{manualResumesResult.error}</p>}
+        {generatedResumesResult.error && <p>{generatedResumesResult.error}</p>}
       </div>
     );
   }
-  initialJobs = initialJobs as Job[];
-  const validResumes = resumes.data?.filter((resume) => {
-    return typeof resume.id === "string" &&
-      typeof resume.resumeTitle === "string" &&
-      !Number.isNaN(resume.createdAt) &&
-      !Number.isNaN(resume.updatedAt);
-  }) ?? [];
-
-  const fetchedGeneratedResumes = await fetchGeneratedResumes();
-  const generatedResumes = (fetchedGeneratedResumes.data && !fetchedGeneratedResumes.error) ? fetchedGeneratedResumes.data : [];
 
   return (
     <main className="mx-auto flex justify-center items-center h-full w-full">
-      {/* This margin is required for vertical spacing */}
-      <Card className="my-6">         
+      <Card className="my-6">
         <CardHeader className="p-4">
           <CardTitle className="text-xl md:text-2xl lg:text-2xl xl:text-2xl">
             Your Dashboard
@@ -66,8 +74,15 @@ export default async function Dashboard() {
         </CardHeader>
         <Separator />
         <CardContent className="grid grid-cols-1 gap-4 p-4">
-          <KanbanBoard initialJobs={initialJobs} resumes={validResumes} generatedResumes={generatedResumes} />
-          <ResumeManager initialResumes={validResumes} generatedResumes={generatedResumes} />
+          <KanbanBoard 
+            initialJobs={initialJobs}
+            resumes={manualResumesResult.data}
+            generatedResumes={generatedResumesResult.data}
+          />
+          <ResumeManager 
+            initialResumes={manualResumesResult.data}
+            generatedResumes={generatedResumesResult.data}
+          />
         </CardContent>
       </Card>
     </main>

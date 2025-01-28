@@ -31,6 +31,8 @@ export default function RootLayout({
 			<head>
 				<link rel="icon" href="/favicon.ico" sizes="any" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF" />
+				<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
 			</head>
 			<body
 				className={`${GeistSans.className} flex flex-col min-h-dvh w-full mx-auto `}

@@ -141,25 +141,3 @@ export async function fetchJobData(jobId: string): Promise<string> {
         return JSON.stringify({error : "Error in fetching job data"});
     }
 }
-
-export async function fetchGeneratedResumes() {
-    try {
-        const userId = await getUserIdFromSession();
-        if(!userId) return {error : "User not found"};
-        const generatedResumes = await db.query.generatedResumeTable.findMany({
-            where: (table) => eq(table.userId, userId),
-            columns: {
-                id:true,
-                resumeId : true,
-                createdAt : true,
-                resumeTitle : true,
-                jobId : true,
-            }
-        });
-        if(!generatedResumes) return {error : "No generated resumes found"};
-        return {data : generatedResumes};
-    } catch (error) {
-        if(error instanceof Error) return {error : error.message};
-        return {error : "Error in fetching generated resumes"};
-    }
-}

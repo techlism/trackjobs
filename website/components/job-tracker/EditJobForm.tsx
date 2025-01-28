@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { JobSchema, type Job } from "@/lib/types";
-import { addJob, updateJob } from "@/app/(pages)/dashboard/action";
+import { addJob, updateJob } from "@/app/(pages)/dashboard/job-actions";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

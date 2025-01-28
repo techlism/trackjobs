@@ -17,6 +17,7 @@ import { PersonalDetails } from "@/components/resume-builder/PersonalDetailsSect
 import { Section } from "@/components/resume-builder/ResumeSection";
 import { CustomSectionCreationDialog } from "@/components/resume-builder/CustomSectionDialog";
 import {
+	type ApiResponse,
 	type PersonalData,
 	type ResumeData,
 	ResumeSchema,
@@ -27,38 +28,40 @@ import {
 } from "@/lib/types";
 import { predefinedSectionConfigs } from "./DefaultSectionsConfig";
 import {
-	saveResumeData,
+	saveManualResumeData,
 	updateResumeData,
-} from "@/app/(pages)/resume-builder/action";
+} from "@/app/(pages)/resume-builder/resume-actions";
+
 import { generateRandomId } from "@/utils";
 
 interface ResumeFormProps {
 	initialData?: ResumeData;
-	resumeID?: string;
+	resumeId?: string;
+	resumeType: "manual" | "generated";
 }
 
-export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
+export default function ResumeForm({
+	initialData,
+	resumeId,
+	resumeType,
+}: ResumeFormProps) {
 	const [processing, setProcessing] = useState<boolean>(false);
-	const [resumeId, setResumeId] = useState<string | undefined>(resumeID);
-
 	// Initialize personal details
-	const [personalDetails, setPersonalDetails] = useState<PersonalData>(
-		() => ({
-			fullName: initialData?.fullName || "",
-			email: initialData?.email || "",
-			phone: initialData?.phone ?? "",
-			location: initialData?.location ?? "",
-			summary: initialData?.summary ?? "",
-			github: initialData?.github ?? "",
-			linkedin: initialData?.linkedin ?? "",
-			portfolio: initialData?.portfolio ?? "",
-		}),
-	);
+	const [personalDetails, setPersonalDetails] = useState<PersonalData>(() => ({
+		fullName: initialData?.fullName || "",
+		email: initialData?.email || "",
+		phone: initialData?.phone ?? "",
+		location: initialData?.location ?? "",
+		summary: initialData?.summary ?? "",
+		github: initialData?.github ?? "",
+		linkedin: initialData?.linkedin ?? "",
+		portfolio: initialData?.portfolio ?? "",
+	}));
 
 	// Initialize resume title
-	const [resumeTitle, setResumeTitle] = useState<string>(() =>
-		initialData?.resumeTitle ||
-		`Resume - ${new Date().toLocaleDateString()}`
+	const [resumeTitle, setResumeTitle] = useState<string>(
+		() =>
+			initialData?.resumeTitle || `Resume - ${new Date().toLocaleDateString()}`,
 	);
 
 	// Initialize sections
@@ -77,20 +80,19 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 		return Object.entries(predefinedSectionConfigs).map(
 			([key, config], idx) => {
 				const sectionId = generateRandomId();
-				const fields: SectionFieldData[] = config.fields.map((
-					field,
-					index,
-				) => ({
-					id: generateRandomId(),
-					name: field.name,
-					label: field.label,
-					type: field.type,
-					required: field.required ?? false,
-					fullWidth: field.fullWidth ?? true,
-					placeholder: field.placeholder ?? "",
-					listType: field.listType,
-					displayOrder: index,
-				}));
+				const fields: SectionFieldData[] = config.fields.map(
+					(field, index) => ({
+						id: generateRandomId(),
+						name: field.name,
+						label: field.label,
+						type: field.type,
+						required: field.required ?? false,
+						fullWidth: field.fullWidth ?? true,
+						placeholder: field.placeholder ?? "",
+						listType: field.listType,
+						displayOrder: index,
+					}),
+				);
 
 				const itemId = generateRandomId();
 
@@ -158,11 +160,11 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 				prevSections.map((section) =>
 					section.id === sectionId
 						? {
-							...section,
-							items: newItems,
-						}
-						: section
-				)
+								...section,
+								items: newItems,
+							}
+						: section,
+				),
 			);
 		},
 		[],
@@ -221,79 +223,95 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 	// Handler for removing a section
 	const handleRemoveSection = useCallback((sectionId: string) => {
 		setSections((prevSections) =>
-			prevSections.filter((section) => section.id !== sectionId)
+			prevSections.filter((section) => section.id !== sectionId),
 		);
 	}, []);
 
-	// Handle form submission
 	const handleFormSubmit = useCallback(
 		async (e: React.FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
 			if (processing) return;
 			setProcessing(true);
-			// console.log("Form data", formData);
+
 			try {
 				const parsedData = ResumeSchema.safeParse(formData);
 
 				if (!parsedData.success) {
 					const formattedErrors = parsedData.error.errors;
-					// biome-ignore lint/complexity/noForEach: <explanation>
-					formattedErrors.forEach((error) => {
-						toast.error(`Issue in the field ${String(error.path).split('.')[0].charAt(0).toUpperCase() + String(error.path).split('.')[0].slice(1).toLowerCase()}`, {
-							description: error.message,
-							action : {
-								label : 'Dismiss',
-								onClick : () => toast.dismiss
-							}
-						});
-					});
+					for (const error of formattedErrors) {
+						toast.error(
+							`Issue in the field ${
+								String(error.path).split(".")[0].charAt(0).toUpperCase() +
+								String(error.path).split(".")[0].slice(1).toLowerCase()
+							}`,
+							{
+								description: error.message,
+								action: {
+									label: "Dismiss",
+									onClick: () => toast.dismiss(),
+								},
+							},
+						);
+					}
 					setProcessing(false);
 					return;
 				}
 
 				const data = parsedData.data;
+				let result: ApiResponse<{ id: string }>;
 
-				const result = resumeId
-					? await updateResumeData(resumeId, data)
-					: await saveResumeData(data);
-
-				if (result.error) {
-					throw new Error(result.error);
+				if (resumeType === "generated") {
+					// Generated resumes can only be updated
+					if (!resumeId)
+						throw new Error("Generated resume requires an existing ID");
+					result = await updateResumeData(resumeId, data, "generated");
+				} else {
+					// Manual resumes: create new or update existing
+					if (resumeId) {
+						result = await updateResumeData(resumeId, data, "manual");
+					} else {
+						result = await saveManualResumeData(data);
+					}
 				}
 
-				if (!resumeId && result.data?.id) {
-					setResumeId(result.data.id);
-				}
+				if (result.error) throw new Error(result.error);
 
-				toast.success("Resume Saved", {
-					description:
-						"Your resume data has been saved successfully.",
+				toast.success(resumeId ? "Resume Updated" : "Resume Created", {
+					description: `Your resume has been ${resumeId ? "updated" : "created"} successfully.`,
 				});
+
+				// If new manual resume created, redirect or update state with new ID
+				if (!resumeId && result.data?.id) {
+					// Handle new ID logic here (e.g., update URL or state)
+				}
 			} catch (error) {
-				toast.error("Failed to save resume", {
-					description: error instanceof Error
-						? error.message
-						: "An unknown error occurred",
-						action : {
-							label : 'Dismiss',
-							onClick : () => toast.dismiss
-						}
+				toast.error("Operation Failed", {
+					description:
+						error instanceof Error
+							? error.message
+							: "An unknown error occurred",
+					action: { label: "Dismiss", onClick: () => toast.dismiss() },
 				});
 			} finally {
 				setProcessing(false);
 			}
 		},
-		[formData, processing, resumeId],
+		[formData, processing, resumeId, resumeType],
 	);
 
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle className="text-2xl">
-					Resume Builder ✨
+					{resumeType === "generated"
+						? "Edit Generated Resume"
+						: "Resume Builder"}{" "}
+					✨
 				</CardTitle>
 				<CardDescription>
-					Just fill the form and see your resume come to life!
+					{resumeType === "generated"
+						? "Edit your AI-generated resume to better match your preferences!"
+						: "Just fill the form and see your resume come to life!"}
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -305,37 +323,32 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 						values={personalDetails}
 						onChange={handlePersonalDetailsChange}
 					/>
-					{sections.length > 0 &&
-						(
-							<div className="grid grid-cols-1 gap-4">
-								{sections.map((section) => (
-									<Section
-										key={section.id}
-										title={section.title}
-										description={section.description}
-										fields={section.fields ?? []} // Ensure fields is an array
-										values={section.items ?? []} // Ensure values is an array
-										onChange={(newItems) =>
-											handleSectionChange(
-												section.id,
-												newItems,
-											)}
-										canAddMore={section.allowMultiple ??
-											true}
-										minItems={section.minItems ?? 1}
-										maxItems={section.maxItems ?? 5}
-										onRemoveSection={predefinedSectionConfigs
-												// biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
-												.hasOwnProperty(
-													section.title,
-												)
+					{sections.length > 0 && (
+						<div className="grid grid-cols-1 gap-4">
+							{sections.map((section) => (
+								<Section
+									key={section.id}
+									title={section.title}
+									description={section.description}
+									fields={section.fields ?? []} // Ensure fields is an array
+									values={section.items ?? []} // Ensure values is an array
+									onChange={(newItems) =>
+										handleSectionChange(section.id, newItems)
+									}
+									canAddMore={section.allowMultiple ?? true}
+									minItems={section.minItems ?? 1}
+									maxItems={section.maxItems ?? 5}
+									onRemoveSection={
+										predefinedSectionConfigs
+											// biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
+											.hasOwnProperty(section.title)
 											? undefined
-											: () =>
-												handleRemoveSection(section.id)}
-									/>
-								))}
-							</div>
-						)}
+											: () => handleRemoveSection(section.id)
+									}
+								/>
+							))}
+						</div>
+					)}
 					<div className="flex mt-4">
 						<CustomSectionCreationDialog
 							onAddSection={handleAddCustomSection}
@@ -346,12 +359,9 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 
 					<Card className="mb-6">
 						<CardHeader>
-							<CardTitle>
-								Save your Resume
-							</CardTitle>
+							<CardTitle>Save your Resume</CardTitle>
 							<CardDescription>
-								Enter a title for your resume and click on the
-								save button.
+								Enter a title for your resume and click on the save button.
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
@@ -359,17 +369,12 @@ export default function ResumeForm({ initialData, resumeID }: ResumeFormProps) {
 								<Input
 									id="resumeTitle"
 									value={resumeTitle}
-									onChange={(e) =>
-										setResumeTitle(e.target.value)}
+									onChange={(e) => setResumeTitle(e.target.value)}
 									placeholder="Resume Title"
 									className="w-full"
 								/>
 							</div>
-							<Button
-								type="submit"
-								disabled={processing}
-								className="mt-2"
-							>
+							<Button type="submit" disabled={processing} className="mt-2">
 								{processing ? <Loader /> : "Save Resume"}
 							</Button>
 						</CardContent>

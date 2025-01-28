@@ -11,6 +11,7 @@ import { generatedResumeTable } from '../../../../lib/database/schema';
 import generatePromptString from "./prompt-string";
 import { revalidatePath } from "next/cache";
 import { zodResponseFormat } from "openai/helpers/zod";
+import { redirect } from "next/navigation";
 
 
 export const maxDuration = 60;
@@ -147,10 +148,7 @@ export async function POST(request: NextRequest) {
             ],
             response_format: zodResponseFormat(ResumeSchema, "resume_schema"),
         });
-        // console.log('Response:', response);
         const parsedResponse = response.choices[0].message.parsed;
-        const rawResponse = response.choices[0].message.content;
-        // console.log('Raw Response:', rawResponse);
         if (!parsedResponse) {
             return NextResponse.json({ error: "Failed to generate resume" }, { status: 500 });
         }        
@@ -163,6 +161,8 @@ export async function POST(request: NextRequest) {
         const parsedResume = ResumeSchema.safeParse(parsedResponse); // This is bit redundant as we are already validating the response in the API but AI responses can be unpredictable sometimes
         if (parsedResume.success && resumeResponse.data && resumeResponse.data.resumeTitle !== undefined) {
             const resTitle = `Resume ${jobData.data.companyName} ${jobData.data.role} v${existingCount ? existingCount.count + 1 : 1}`;
+            const finalResumeContent = parsedResume.data;
+            finalResumeContent.resumeTitle = resTitle;
             await db.transaction(async (tx) => {
                 // Insert generated resume with all required fields
                 await tx.insert(generatedResumeTable).values({
@@ -171,7 +171,7 @@ export async function POST(request: NextRequest) {
                     userId: session.userId,
                     jobId: jobID,
                     resumeTitle: resTitle,
-                    resumeContent: JSON.stringify(parsedResume.data),
+                    resumeContent: finalResumeContent,
                     createdAt: Date.now(),
                     updatedAt: Date.now(),
                 });
@@ -193,7 +193,7 @@ export async function POST(request: NextRequest) {
                     });
                 }
             });
-            revalidatePath('/dashboard', 'page');
+            revalidatePath('/dashboard', 'page');            
             return NextResponse.json({ success: 'Resume generated Successfully.' }, { status: 200 });
         }
         return NextResponse.json({ error: "Failed to parse resume correctly" }, { status: 500 });

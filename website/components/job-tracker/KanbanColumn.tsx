@@ -193,7 +193,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 				},
 			});
 			if (data.success) {
-				router.refresh();
+				router.replace('/dashboard');
 			}
 		} catch (error) {
 			// console.error("Error generating optimized resume", error);
@@ -231,29 +231,29 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 
 		try {
 			const response = await fetch(
-                `/api/download-resume?generated_resume_id=${generatedResumeId}`,
-                { method: "GET" },
-            );
+				`/api/download-resume?generated_resume_id=${generatedResumeId}`,
+				{ method: "GET" },
+			);
 
-            if (!response.ok) throw new Error("Download failed");
-            const contentDisposition = response.headers.get("Content-Disposition");
-            let fileName = `Resume ${generatedResumeId}.pdf`;
-            if (contentDisposition) {
-                const matches = /filename=([^;]+)/g.exec(contentDisposition);
-                if (matches?.[1]) {
-                    fileName = matches[1].replace(/["']/g, '');
-                    fileName = decodeURIComponent(fileName);
-                }
-            }            
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);			
+			if (!response.ok) throw new Error("Download failed");
+			const contentDisposition = response.headers.get("Content-Disposition");
+			let fileName = `Resume ${generatedResumeId}.pdf`;
+			if (contentDisposition) {
+				const matches = /filename=([^;]+)/g.exec(contentDisposition);
+				if (matches?.[1]) {
+					fileName = matches[1].replace(/["']/g, "");
+					fileName = decodeURIComponent(fileName);
+				}
+			}
+			const blob = await response.blob();
+			const url = window.URL.createObjectURL(blob);
+			const link = document.createElement("a");
+			link.href = url;
+			link.download = fileName;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			window.URL.revokeObjectURL(url);
 			toast.success("Resume downloaded successfully");
 		} catch (error) {
 			console.error("Error downloading resume:", error);
@@ -267,22 +267,22 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 
 	return (
 		<div
-			className={`rounded-md shadow-sm ${
-				colorBasedOnStatus(status, "background")
-			}`}
+			className={`rounded-md shadow-sm ${colorBasedOnStatus(
+				status,
+				"background",
+			)}`}
 		>
 			<div className="flex items-center justify-between p-2">
 				<h3
-					className={`text-xl font-bold ${
-						colorBasedOnStatus(status, "text")
-					}`}
+					className={`text-xl font-bold ${colorBasedOnStatus(status, "text")}`}
 				>
 					{status}
 				</h3>
 				<div
-					className={`text-lg font-medium font-mono ${
-						colorBasedOnStatus(status, "text")
-					}`}
+					className={`text-lg font-medium font-mono ${colorBasedOnStatus(
+						status,
+						"text",
+					)}`}
 				>
 					{jobs.length}
 				</div>
@@ -291,31 +291,31 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 				className={`${colorBasedOnStatus(status, "separator")} my-2 `}
 			/>
 			<ScrollArea className="h-[270px] p-1.5">
-				<ScrollBar
-					className={`${colorBasedOnStatus(status, "scrollBar")}`}
-				/>
+				<ScrollBar className={`${colorBasedOnStatus(status, "scrollBar")}`} />
 				{jobs.map((job) => (
 					<div
 						key={job.id}
-						className={"mb-2 mx-1.5 max-w-[99.7%] hover:scale-[1.03] transition-all duration-150 hover:rounded-md hover:shadow-sm border-border hover:border-border"}
+						className={
+							"mb-2 mx-1.5 max-w-[99.7%] hover:scale-[1.03] transition-all duration-150 hover:rounded-md hover:shadow-sm border-border hover:border-border"
+						}
 					>
 						<div
-							className={`flex justify-between items-center rounded-md p-2 ${
-								colorBasedOnStatus(status, "card")
-							} `}
+							className={`flex justify-between items-center rounded-md p-2 ${colorBasedOnStatus(
+								status,
+								"card",
+							)} `}
 						>
 							<div className="font-medium max-w-[95%] grid grid-cols-1 text-wrap truncate text-base">
 								<h4
-									className={`${
-										colorBasedOnStatus(status, "text")
-									} text-base`}
+									className={`${colorBasedOnStatus(status, "text")} text-base`}
 								>
 									{job.role}
 								</h4>
 								<p
-									className={`${
-										colorBasedOnStatus(status, "text")
-									} text-sm opacity-65`}
+									className={`${colorBasedOnStatus(
+										status,
+										"text",
+									)} text-sm opacity-65`}
 								>
 									{job.companyName}
 								</p>
@@ -325,9 +325,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 								<DialogTrigger asChild>
 									<Button
 										variant="ghost"
-										className={`${
-											colorBasedOnStatus(status, "hover")
-										}`}
+										className={`${colorBasedOnStatus(status, "hover")}`}
 									>
 										<Expand className="h-4 w-4" />
 									</Button>
@@ -339,18 +337,14 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 										</DialogTitle>
 										<DialogDescription className="leading-7 [&:not(:first-child)]:mt-6 text-xs md:text-sm lg:text-sm">
 											{job.companyName} |{" "}
-											{new Date(job.appliedOn)
-												.toLocaleDateString()}{" "}
-											{new Date(job.appliedOn)
-												.toLocaleTimeString()}
+											{new Date(job.appliedOn).toLocaleDateString()}{" "}
+											{new Date(job.appliedOn).toLocaleTimeString()}
 										</DialogDescription>
 									</DialogHeader>
 									<Separator className="m-0 p-0" />
 									<div className="grid gap-2 grid-cols-1">
 										<div className="space-y-1">
-											<p className="font-semibold text-lg">
-												Job Description
-											</p>
+											<p className="font-semibold text-lg">Job Description</p>
 											<ScrollArea className="lg:h-[95px] md:h-[80px] h-[70px]">
 												<ScrollBar className="bg-border" />
 												<p className="font-medium text-justify text-sm max-w-[97%]">
@@ -359,9 +353,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 											</ScrollArea>
 										</div>
 										<div className="space-y-1">
-											<p className="font-semibold text-lg">
-												Job Link
-											</p>
+											<p className="font-semibold text-lg">Job Link</p>
 											<Link
 												href={job.link}
 												target="_blank"
@@ -371,46 +363,35 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 											</Link>
 										</div>
 										<div className="space-y-1">
-											<p className="font-semibold text-lg">
-												Job Status
-											</p>
+											<p className="font-semibold text-lg">Job Status</p>
 											<Select
 												onValueChange={(newStatus) =>
-													onMoveJob(
-														job.id || "",
-														newStatus as JobStatusType,
-													)}
+													onMoveJob(job.id || "", newStatus as JobStatusType)
+												}
 											>
 												<SelectTrigger
 													id="job-status"
 													className="focus:ring-0 font-medium"
 												>
 													<SelectValue
-														placeholder={job
-															.currentStatus}
+														placeholder={job.currentStatus}
 														className="font-medium"
 													/>
 												</SelectTrigger>
 												<SelectContent className="font-medium">
-													{JobStatusValues.filter((
-														newStatus,
-													) => status !== newStatus)
-														.map((newStatus) => (
-															<SelectItem
-																key={newStatus}
-																value={newStatus}
-															>
-																{newStatus}
-															</SelectItem>
-														))}
+													{JobStatusValues.filter(
+														(newStatus) => status !== newStatus,
+													).map((newStatus) => (
+														<SelectItem key={newStatus} value={newStatus}>
+															{newStatus}
+														</SelectItem>
+													))}
 												</SelectContent>
 											</Select>
 										</div>
 										{job.notes && job.notes.length > 0 && (
 											<div className="space-y-1">
-												<p className="font-semibold text-lg">
-													Notes
-												</p>
+												<p className="font-semibold text-lg">Notes</p>
 												<ScrollArea className="lg:h-[80px] md:h-[65px] h-[60px]">
 													<ScrollBar className="bg-border" />
 													<p className="font-medium text-justify text-sm max-w-[97%]">
@@ -421,10 +402,9 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 										)}
 									</div>
 									{generatedResumes.length > 0 &&
-										generatedResumes.some((resume) =>
-											resume.jobId === job.id
-										) &&
-										(
+										generatedResumes.some(
+											(resume) => resume.jobId === job.id,
+										) && (
 											<form
 												onSubmit={downloadResume}
 												className="border border-border/80 p-2 rounded-lg grid grid-cols-1 gap-2"
@@ -435,21 +415,12 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 													</SelectTrigger>
 													<SelectContent>
 														{generatedResumes.map(
-															(resume) => (
-																resume.jobId ===
-																	job.id &&
-																(
-																	<SelectItem
-																		key={resume
-																			.id}
-																		value={resume
-																			.id}
-																	>
-																		{resume
-																			.resumeTitle}
+															(resume) =>
+																resume.jobId === job.id && (
+																	<SelectItem key={resume.id} value={resume.id}>
+																		{resume.resumeTitle}
 																	</SelectItem>
-																)
-															),
+																),
 														)}
 													</SelectContent>
 												</Select>
@@ -458,26 +429,22 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 													size={"sm"}
 													disabled={isDownloading}
 												>
-													{isDownloading
-														? (
-															<>
-																<Loader2 className="h-4 w-4 mr-2 animate-spin" />
-																Downloading...
-															</>
-														)
-														: (
-															<>
-																<DownloadIcon className="h-4 w-4 mr-2" />
-																Download
-																Generated Resume
-															</>
-														)}
+													{isDownloading ? (
+														<>
+															<Loader2 className="h-4 w-4 mr-2 animate-spin" />
+															Downloading...
+														</>
+													) : (
+														<>
+															<DownloadIcon className="h-4 w-4 mr-2" />
+															Download Generated Resume
+														</>
+													)}
 												</Button>
 											</form>
 										)}
 									<form
-										onSubmit={(event) =>
-											generateResume(event, job.id || "")}
+										onSubmit={(event) => generateResume(event, job.id || "")}
 										className="border border-border/80 p-2 rounded-lg"
 									>
 										<div className="space-y-1">
@@ -485,8 +452,8 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 												AI Resume Optimization
 											</h4>
 											<p className="text-xs text-muted-foreground leading-relaxed">
-												Choose one of your resumes to
-												create an AI-optimized version.
+												Choose one of your resumes to create an AI-optimized
+												version.
 											</p>
 										</div>
 
@@ -497,10 +464,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 												</SelectTrigger>
 												<SelectContent>
 													{resumes.map((resume) => (
-														<SelectItem
-															key={resume.id}
-															value={resume.id}
-														>
+														<SelectItem key={resume.id} value={resume.id}>
 															{resume.resumeTitle}
 														</SelectItem>
 													))}
@@ -513,19 +477,17 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 												disabled={isGenerating}
 												size={"sm"}
 											>
-												{isGenerating
-													? (
-														<>
-															<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-															Optimizing...
-														</>
-													)
-													: (
-														<>
-															<Wand2 className="mr-2 h-4 w-4" />
-															Create Optimized Version
-														</>
-													)}
+												{isGenerating ? (
+													<>
+														<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+														Optimizing...
+													</>
+												) : (
+													<>
+														<Wand2 className="mr-2 h-4 w-4" />
+														Create Optimized Version
+													</>
+												)}
 											</Button>
 										</div>
 									</form>
@@ -534,8 +496,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 											<Button
 												type="button"
 												variant="destructive"
-												onClick={() =>
-													onDeleteJob(job.id || "")}
+												onClick={() => onDeleteJob(job.id || "")}
 												size={"sm"}
 											>
 												Delete Job

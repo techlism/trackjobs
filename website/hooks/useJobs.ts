@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { Job, JobStatus } from '@/lib/types';
-import { updateJob, deleteJob, addJob } from '@/app/(pages)/dashboard/action';
+import { updateJob, deleteJob, addJob } from '@/app/(pages)/dashboard/job-actions';
 
 export const useJobs = (initialJobs: Job[]) => {
   const [jobs, setJobs] = useState<Job[]>(initialJobs);
