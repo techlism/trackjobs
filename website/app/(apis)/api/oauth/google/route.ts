@@ -25,9 +25,9 @@ export const GET = async (req: NextRequest) => {
     if (!code || !state) {
       return Response.json({ error: "Invalid request" }, { status: 400 })
     }
-
-    const codeVerifier = cookies().get("codeVerifier")?.value
-    const savedState = cookies().get("state")?.value
+    const cookie = await cookies();
+    const codeVerifier = cookie.get("codeVerifier")?.value
+    const savedState = cookie.get("state")?.value
 
     if (!codeVerifier || !savedState) {
       return Response.json({ error: "Code verifier or saved state is missing" }, { status: 400 })
@@ -101,14 +101,14 @@ export const GET = async (req: NextRequest) => {
     const session = await lucia.createSession(googleData.id, {})
     const sessionCookie = lucia.createSessionCookie(session.id)
 
-    cookies().set(
+    cookie.set(
       sessionCookie.name,
       sessionCookie.value,
       sessionCookie.attributes
     )
 
-    cookies().delete("state")
-    cookies().delete("codeVerifier")
+    cookie.delete("state")
+    cookie.delete("codeVerifier")
 
     return NextResponse.redirect(
       new URL("/dashboard", process.env.NEXT_PUBLIC_BASE_URL),
