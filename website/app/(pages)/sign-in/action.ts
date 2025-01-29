@@ -75,7 +75,7 @@ export const signIn = async (values: z.infer<typeof SignInSchema>): Promise<Acti
 
   const sessionCookie = lucia.createSessionCookie(session.id);
 
-  cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+  (await cookies()).set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
   return {
     success: true,

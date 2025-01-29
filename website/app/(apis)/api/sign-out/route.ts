@@ -12,9 +12,9 @@ export const GET = async (req: NextRequest) => {
 
         await lucia.invalidateSession(session.id)
 
-        const sessionCookie = lucia.createBlankSessionCookie()
+        const sessionCookie = lucia.createBlankSessionCookie();
 
-        cookies().set(
+        (await cookies()).set(
             sessionCookie.name,
             sessionCookie.value,
             {
@@ -23,7 +23,7 @@ export const GET = async (req: NextRequest) => {
                 secure: process.env.NODE_ENV === "production",
                 sameSite: 'strict'
             }
-        )
+        );
 
         return NextResponse.redirect(new URL("/"));
     } catch (error: unknown) {

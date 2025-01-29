@@ -228,7 +228,7 @@ export const verifyOTPForSignup = async (userId: string, otp: string): Promise<A
 
         const sessionCookie = lucia.createSessionCookie(session.id);
 
-        cookies().set(
+        (await cookies()).set(
           sessionCookie.name,
           sessionCookie.value,
           sessionCookie.attributes,
