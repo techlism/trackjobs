@@ -6,15 +6,15 @@ import { cookies } from "next/headers";
 export const createGoogleAuthorizationURL = async () => {
   try {
     const state = generateState()
-    const codeVerifier = generateCodeVerifier()
+    const codeVerifier = generateCodeVerifier();
 
-    cookies().set("codeVerifier", codeVerifier, {
+    (await cookies()).set("codeVerifier", codeVerifier, {
       httpOnly: true,
-    })
+    });
 
-    cookies().set("state", state, {
+    (await cookies()).set("state", state, {
       httpOnly: true,
-    })
+    });
 
     const authorizationURL = await google.createAuthorizationURL(
       state,
