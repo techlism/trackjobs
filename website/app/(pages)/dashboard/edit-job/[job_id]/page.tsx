@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import type { Job } from "@/lib/types";
 import { EditJobForm } from '@/components/job-tracker/EditJobForm';
 
-export default async function Page({ params }: { params: { job_id: string } }) {
-  const { job_id } = params;
+export default async function Page({ params }: { params: Promise<{ job_id: string }> }) {
+  const { job_id } = await params;
 
   if (!job_id) {
     return <div>Job not found</div>;
