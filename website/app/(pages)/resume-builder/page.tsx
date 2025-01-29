@@ -6,13 +6,12 @@ import { fetchResumeData } from "./resume-actions";
 export default async function ResumeBuilderPage({
     searchParams,
 }: {
-    searchParams: { [key: string]: string | undefined };
+    searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
     const { session } = await validateRequest();
     if (!session) redirect("/sign-in");
-
-    const resumeID = searchParams.resume_id;
-    const resumeType = searchParams.resume_type;
+    const resumeID = (await searchParams).resume_id;
+    const resumeType = (await searchParams).resume_type;
 
     if (resumeID) {
         // Validate both params exist
