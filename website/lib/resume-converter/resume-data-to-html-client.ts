@@ -1,5 +1,5 @@
 // Meant for server side only
-import { ServerHTMLJSONConverter } from "html-json-converter/server";
+import { ClientHTMLJSONConverter } from "html-json-converter/client";
 import type { ResumeData, SectionData, SectionItemData } from "../types";
 import DOMPurify from "isomorphic-dompurify";
 
@@ -19,6 +19,8 @@ const defaultStyle: HTMLNode = {
             font-family: 'Source Serif 4', serif;
             line-height: 1.1;
             text-rendering: geometricPrecision;
+            overflow : auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
         body {                
             margin: 0.5rem auto;
@@ -133,11 +135,11 @@ const defaultStyle: HTMLNode = {
     `]
 };
 
-export function generateFullHTML(resumeData: ResumeData, styles?: HTMLNode): string {
+export function generateFullHTMLClientSide(resumeData: ResumeData, styles?: HTMLNode): string {
     const headerContent = generateHeader(resumeData);
     const mainContent = generateMainContent(resumeData);
     const headContent = generateHead(resumeData.resumeTitle, styles || defaultStyle);
-    const converter = new ServerHTMLJSONConverter();
+    const converter = new ClientHTMLJSONConverter();
     const cleanedHeaderContent = DOMPurify.sanitize(converter.toHTML(headerContent));
     const cleanedMainContent = DOMPurify.sanitize(converter.toHTML(mainContent));
     const finalHTML = `<!DOCTYPE html>\n${converter.toHTML(headContent)}${cleanedHeaderContent}${cleanedMainContent}`;
@@ -151,14 +153,14 @@ function generateHead(resumeTitle: string, styles: HTMLNode): HTMLNode {
             { tag: 'title', children: [resumeTitle] },
             { tag: 'meta', attributes: { charset: 'UTF-8' } },
             { tag: 'meta', attributes: { name: 'viewport', content: 'width=device-width, initial-scale=1.0' } },
-            { tag: 'link', attributes: { rel: 'preconnect', href: 'https://fonts.googleapis.com' } },
-            { tag: 'link', attributes: { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' } },
-            {
-                tag: 'link', attributes: {
-                    rel: 'stylesheet',
-                    href: 'https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap'
-                }
-            },
+            // { tag: 'link', attributes: { rel: 'preconnect', href: 'https://fonts.googleapis.com' } },
+            // { tag: 'link', attributes: { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' } },
+            // {
+            //     tag: 'link', attributes: {
+            //         rel: 'stylesheet',
+            //         href: 'https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap'
+            //     }
+            // },
             styles
         ]
     };

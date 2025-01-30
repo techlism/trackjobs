@@ -26,6 +26,9 @@ import { Separator } from "../ui/separator";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import type { ResumeData } from "@/lib/types";
+import { generateFullHTMLClientSide } from "@/lib/resume-converter/resume-data-to-html-client";
+import { ResumePreviewDialog } from "./ResumePreviewDialog";
 
 interface ResumeManagerProps {
 	initialResumes: {
@@ -51,45 +54,45 @@ export default function ResumeManager({
 	const [downloadingResumeId, setDownloadingResumeId] = useState<string | null>(
 		null,
 	);
+	const [HTMLString, setHTMLString] = useState<string | null>(null);
+
 	const router = useRouter();
 
-	const handleEdit = (id: string, type : 'manual' | 'generated') => {
+	const handleEdit = (id: string, type: "manual" | "generated") => {
 		router.push(`/resume-builder?resume_id=${id}&resume_type=${type}`);
 	};
 
-	const handleDelete = async (id: string, type: 'manual' | 'generated') => {
+	const handleDelete = async (id: string, type: "manual" | "generated") => {
 		try {
 			const result = await deleteResumeData(id, type);
 			if (result.error) throw new Error(result.error);
-			
+
 			// Update correct state based on type
-			if (type === 'manual') {
-				setManualResumes(prev => prev.filter(resume => resume.id !== id));
+			if (type === "manual") {
+				setManualResumes((prev) => prev.filter((resume) => resume.id !== id));
 			} else {
-				setGenResumes(prev => prev.filter(resume => resume.id !== id));
+				setGenResumes((prev) => prev.filter((resume) => resume.id !== id));
 			}
-			
+
 			toast.success("Resume deleted successfully");
 		} catch (error) {
 			toast.error(error instanceof Error ? error.message : "Deletion failed");
 		}
 	};
 
-
 	const handleDownload = async (
-		generatedResumeId: string,
+		resumeID: string,
 		type: "generated_resume_id" | "manual_resume_id",
 	) => {
 		try {
-			setDownloadingResumeId(generatedResumeId);
-			const response = await fetch(
-				`/api/download-resume?${type}=${generatedResumeId}`,
-				{ method: "GET" },
-			);
+			setDownloadingResumeId(resumeID);
+			const response = await fetch(`/api/download-resume?${type}=${resumeID}`, {
+				method: "GET",
+			});
 
 			if (!response.ok) throw new Error("Download failed");
 			const contentDisposition = response.headers.get("Content-Disposition");
-			let fileName = `Resume ${generatedResumeId}.pdf`;
+			let fileName = `Resume ${resumeID}.pdf`;
 			if (contentDisposition) {
 				const matches = /filename=([^;]+)/g.exec(contentDisposition);
 				if (matches?.[1]) {
@@ -124,7 +127,7 @@ export default function ResumeManager({
 		date: string;
 		children: React.ReactNode;
 	}) => (
-		<div className="flex justify-between w-full p-3 rounded-lg border border-border/70 hover:border-border transition-colors bg-card">
+		<div className="lg:flex lg:justify-between md:flex md:justify-between sm:flex sm:justify-between grid grid-cols-1 w-full p-3 rounded-lg border border-border/70 hover:border-border transition-colors bg-card">
 			<div className="grid grid-cols-1 gap-1">
 				<p className="text-sm font-medium truncate">{title}</p>
 				<p className="text-xs text-muted-foreground">{date}</p>
@@ -170,6 +173,10 @@ export default function ResumeManager({
 										title={resume.resumeTitle}
 										date={new Date(resume.updatedAt).toLocaleDateString()}
 									>
+										<ResumePreviewDialog
+											resumeId={resume.id}
+											type="manual_resume_id"
+										/>
 										<Button
 											variant="outline"
 											size="icon"
@@ -184,13 +191,15 @@ export default function ResumeManager({
 											) : (
 												<Download className="h-4 w-4" />
 											)}
+											<span className="sr-only">Download Resume</span>
 										</Button>
 										<Button
 											variant="outline"
 											size="icon"
 											className="h-8 w-8 hover:bg-primary/5 text-pretty hover:text-primary"
-											onClick={() => handleEdit(resume.id, 'manual')}
+											onClick={() => handleEdit(resume.id, "manual")}
 										>
+											<span className="sr-only">Edit Resume</span>
 											<FileEdit className="h-4 w-4" />
 										</Button>
 										<AlertDialog>
@@ -201,6 +210,7 @@ export default function ResumeManager({
 													className="h-8 w-8 hover:bg-destructive/5"
 												>
 													<Trash2 className="h-4 w-4 text-destructive" />
+													<span className="sr-only">Delete Resume</span>
 												</Button>
 											</AlertDialogTrigger>
 											<AlertDialogContent>
@@ -214,7 +224,7 @@ export default function ResumeManager({
 												<AlertDialogFooter>
 													<AlertDialogCancel>Cancel</AlertDialogCancel>
 													<AlertDialogAction
-														onClick={() => handleDelete(resume.id, 'manual')}
+														onClick={() => handleDelete(resume.id, "manual")}
 														className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
 													>
 														Delete
@@ -247,6 +257,10 @@ export default function ResumeManager({
 										title={resume.resumeTitle}
 										date={new Date(resume.createdAt).toLocaleDateString()}
 									>
+										<ResumePreviewDialog
+											resumeId={resume.id}
+											type="generated_resume_id"
+										/>
 										<Button
 											variant="outline"
 											size="icon"
@@ -261,14 +275,16 @@ export default function ResumeManager({
 											) : (
 												<Download className="h-4 w-4" />
 											)}
+											<span className="sr-only">Download Resume</span>
 										</Button>
 										<Button
 											variant="outline"
 											size="icon"
 											className="h-8 w-8 hover:bg-primary/5 text-pretty hover:text-primary"
-											onClick={() => handleEdit(resume.id, 'generated')}
+											onClick={() => handleEdit(resume.id, "generated")}
 										>
 											<FileEdit className="h-4 w-4" />
+											<span className="sr-only">Edit Resume</span>
 										</Button>
 										<AlertDialog>
 											<AlertDialogTrigger asChild>
@@ -278,6 +294,7 @@ export default function ResumeManager({
 													className="h-8 w-8 hover:bg-destructive/5"
 												>
 													<Trash2 className="h-4 w-4 text-destructive" />
+													<span className="sr-only">Delete Resume</span>
 												</Button>
 											</AlertDialogTrigger>
 											<AlertDialogContent>
@@ -291,7 +308,7 @@ export default function ResumeManager({
 												<AlertDialogFooter>
 													<AlertDialogCancel>Cancel</AlertDialogCancel>
 													<AlertDialogAction
-														onClick={() => handleDelete(resume.id, 'generated')}
+														onClick={() => handleDelete(resume.id, "generated")}
 														className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
 													>
 														Delete

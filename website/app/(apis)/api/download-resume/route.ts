@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 import type { ResumeData } from "@/lib/types";
 import puppeteer, { type Browser } from 'puppeteer';
-import { generateFullHTML } from "@/lib/resume-converter/resume-data-to-html";
+import { generateFullHTMLServerSide } from "@/lib/resume-converter/resume-data-to-html-server";
 import puppeteerCore, { type Browser as BrowserCore } from 'puppeteer-core';
 import chromium from '@sparticuz/chromium-min';
 
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
 
         // const parsedResumeContent: ResumeData = JSON.parse(resumeContent);
         // parsedResumeContent.resumeTitle = resumeTitle;
-        const finalHTML = generateFullHTML(resumeContent);
+        const finalHTML = await generateFullHTMLServerSide(resumeContent);
         let browser: Browser | BrowserCore;
         if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
             // console.trace('Using Puppeteer Core for production');

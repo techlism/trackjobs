@@ -1,4 +1,4 @@
-import type { HTMLNode } from "./resume-data-to-html";
+import type { HTMLNode } from "./resume-data-to-html-server";
 
 interface ResumeStyle {
     fontFamily: string;
