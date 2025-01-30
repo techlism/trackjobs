@@ -51,7 +51,7 @@ export default async function Dashboard() {
     || !manualResumesResult.data || !generatedResumesResult.data
   ) {
     return (
-      <div className="p-4 border rounded-lg">
+      <div className="p-4 border rounded-md">
         <h1 className="text-2xl font-bold mb-4">Your Dashboard</h1>
         <p>Unable to fetch data. Please try again later.</p>
         {!Array.isArray(initialJobs) && <p>Error loading jobs</p>}
@@ -62,7 +62,7 @@ export default async function Dashboard() {
   }
 
   return (
-    <main className="mx-auto flex justify-center items-center h-full w-full">
+    <main className="mx-auto flex justify-center items-center h-full w-full">     
       <Card className="my-6">
         <CardHeader className="p-4">
           <CardTitle className="text-xl md:text-2xl lg:text-2xl xl:text-2xl">
