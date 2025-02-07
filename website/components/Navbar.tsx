@@ -44,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({ className }: NavbarProps) => {
                                     src="/trackjobs_logo.svg"
                                     height={32}
                                     width={32}
-                                    alt="TrackJobs Logo"
+                                    alt="TrackJobs Logo"   
                                 />
                             </Link>        
                         <div className="hidden md:block">

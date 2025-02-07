@@ -332,7 +332,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 								</DialogTrigger>
 								<DialogContent className="lg:w-[550px] md:w-[450px] sm:w-[450px] w-[350px] py-3">
 									<DialogHeader className="mt-1">
-										<DialogTitle className="text-xl font-bold">
+										<DialogTitle className="text-xl font-semibold">
 											{job.role}
 										</DialogTitle>
 										<DialogDescription className="leading-7 [&:not(:first-child)]:mt-6 text-xs md:text-sm lg:text-sm">

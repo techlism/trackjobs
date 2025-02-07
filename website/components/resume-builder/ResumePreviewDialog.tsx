@@ -63,7 +63,7 @@ export function ResumePreviewDialog({
 			</DialogTrigger>
 			<DialogContent className="max-w-[300px] md:max-w-2xl lg:max-w-3xl xl:max-w-3xl">
 				<DialogHeader>
-					<DialogTitle className="no-underline">
+					<DialogTitle className="text-xl font-semibold">
 						{resumeTitle ? `${resumeTitle} Preview` : "Resume Preview"}
 					</DialogTitle>
                     <DialogDescription className="text-justify">
@@ -76,7 +76,7 @@ export function ResumePreviewDialog({
 							<Loader2 className="h-8 w-8 animate-spin text-primary" />
 						</div>
 					) : (
-						<ScrollArea className="h-[70vh] border-border border rounded-md p-2">
+						<ScrollArea className="h-[70vh] border-border border-2 rounded-md p-2">
 							<div
 								// biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitized and trusted
 								dangerouslySetInnerHTML={{ __html: html || "" }}
