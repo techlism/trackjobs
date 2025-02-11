@@ -36,3 +36,15 @@ website/*.tsbuildinfo
 website/next-env.d.ts
 
 extension/extension.zip
+
+startup_funding/bin
+startup_funding/data
+startup_funding/include
+startup_funding/lib
+startup_funding/lib64
+startup_funding/lib64/*
+startup_funding/.env
+startup_funding/.env*
+startup_funding/.lock
+startup_funding/pyvenv.cfg
+startup_funding/src/*.json
