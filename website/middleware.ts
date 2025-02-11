@@ -12,6 +12,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  if(request.nextUrl.pathname === '/funding-news'){
+    return NextResponse.next();
+  }
+
   const headers = new Headers(request.headers);
   const protocol = headers.get('x-forwarded-proto');
   const ip = headers.get('x-forwarded-for');

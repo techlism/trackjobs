@@ -23,6 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({ className }: NavbarProps) => {
         { href: "/dashboard", label: "Dashboard" },
         { href: "/resume-builder", label: "Resume-Builder (Beta)" },
         { href: "/account", label: "Account" },
+        { href: "/funding-news", label : "Funding News (Beta)"}
     ];
 
     const menuItemVariants = {

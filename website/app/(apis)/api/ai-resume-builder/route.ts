@@ -7,11 +7,11 @@ import { generatedResumeCountTable, manualResumeTable } from "@/lib/database/sch
 import { decrypt } from "@/lib/encryption/decryptor";
 import { and, eq } from "drizzle-orm";
 import OpenAI from "openai";
-import { generatedResumeTable } from '../../../../lib/database/schema';
+import { generatedResumeTable } from '@/lib/database/schema';
 import generatePromptString from "./prompt-string";
 import { revalidatePath } from "next/cache";
 import { zodResponseFormat } from "openai/helpers/zod";
-import { redirect } from "next/navigation";
+// import { redirect } from "next/navigation";
 
 
 export const maxDuration = 60;

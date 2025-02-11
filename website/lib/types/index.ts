@@ -168,3 +168,37 @@ export type ApiResponse<T> = {
 	data?: T;
 	error?: string;
 };
+
+export interface FundingRound {
+	amount_raised_usd: number | null
+	funding_stage: string
+	valuation_usd: number | null
+	investors: string | null
+	snapshot_date: string
+}
+
+export interface Company {
+	company_id: string
+	company_name: string
+	industry_sector: string
+	website: string | null
+	linkedin: string | null
+	brief_summary: string | null
+	funding_rounds: FundingRound[]
+}
+
+export interface DashboardData {
+	data: Company[]
+	currentPage: number
+	totalPages: number
+	batchDate: string
+	industries: string[] // Added industries to DashboardData
+}
+
+export interface FundingFilters {
+    industry?: string
+    search?: string
+    sortBy?: Exclude<keyof Company, 'funding_rounds'> | "latest_raise"
+    sortDirection?: "asc" | "desc"
+}
+
