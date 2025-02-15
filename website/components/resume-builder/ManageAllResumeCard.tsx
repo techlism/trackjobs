@@ -207,7 +207,7 @@ export default function ResumeManager({
 												<Button
 													variant="outline"
 													size="icon"
-													className="h-8 w-8 hover:bg-destructive/5"
+													className="h-8 w-8 hover:bg-destructive/10"
 												>
 													<Trash2 className="h-4 w-4 text-destructive" />
 													<span className="sr-only">Delete Resume</span>
@@ -291,7 +291,7 @@ export default function ResumeManager({
 												<Button
 													variant="outline"
 													size="icon"
-													className="h-8 w-8 hover:bg-destructive/5"
+													className="h-8 w-8 hover:bg-destructive/10"
 												>
 													<Trash2 className="h-4 w-4 text-destructive" />
 													<span className="sr-only">Delete Resume</span>

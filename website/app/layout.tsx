@@ -37,7 +37,7 @@ export default function RootLayout({
 			<body
 				className={`${GeistSans.className} flex flex-col min-h-dvh w-full mx-auto `}
 			>
-				<ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+				<ThemeProvider attribute="class" defaultTheme="light" enableSystem>
 					<Navbar className="flex-shrink-0" />
 					<main className="flex-grow flex flex-col max-w-7xl mx-auto my-auto items-center justify-center">
 						{children}
