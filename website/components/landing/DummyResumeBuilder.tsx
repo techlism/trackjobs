@@ -95,7 +95,7 @@ export default function DummyResumeBuilder() {
 	return (
 		<div
 			ref={containerRef}
-			className="w-full max-w-2xl mx-auto space-y-4 p-6 rounded-lg"
+			className="w-full max-w-2xl mx-auto space-y-4 rounded-lg"
 		>
 			{sections.map(({ id, title, fields }) => (
 				<div

@@ -1,16 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import {
-	Check,
-	ChevronRight,
-	FileText,
-	Globe,
-	Linkedin,
-	Quote,
-	Sparkles,
-	Star,
-} from "lucide-react";
-import IllustrationRenderer from "../IllustrationRenderer";
+import { Check, ChevronRight, Quote, Star } from "lucide-react";
 import {
 	Accordion,
 	AccordionContent,
@@ -22,8 +12,11 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Separator } from "../ui/separator";
 import DummyFundingTable from "./DummyFundingTable";
+import DummyJobTracker from "./DummyJobTracker";
 import DummyKanbanHomePage from "./DummyKanbanHomePage";
 import DummyResumeBuilder from "./DummyResumeBuilder";
+import IllustrationRenderer from "./IllustrationRenderer";
+import Link from "next/link";
 
 const FEATURES = [
 	{
@@ -200,8 +193,8 @@ export default function LandingPage() {
 	let usedCols = 0;
 	let currentRow = 0;
 	return (
-		<div className="flex flex-col">
-			<section className="w-full min-h-[70vh] flex flex-col items-center justify-center mt-4 p-2 py-10 rounded-lg hero-bg dark:border dark:border-border relative">
+		<div className="grid grid-cols-1 gap-12">
+			<section className="w-full flex flex-col items-center justify-center mt-10 p-2 py-10 rounded-lg hero-bg dark:border dark:border-border relative">
 				<motion.div
 					initial={{ opacity: 0, y: -10 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -228,16 +221,16 @@ export default function LandingPage() {
 					</Button>
 				</div>
 
-				<motion.div className="mt-12 lg:w-full md:w-[90%] max-w-3xl mx-auto">
+				<motion.div className="mt-10 lg:w-full md:w-[90%] max-w-3xl mx-auto">
 					<DummyKanbanHomePage />
 				</motion.div>
 			</section>
 
-			<section className="py-16 w-full">
+			<section className="w-full">
 				<h2 className="text-3xl font-bold text-center mb-4">
 					Everything You Need to Succeed
 				</h2>
-				<p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
+				<p className="text-muted-foreground text-center mb-4 max-w-2xl mx-auto">
 					Powerful tools and insights that transform your job search from
 					chaotic to strategic
 				</p>
@@ -296,7 +289,7 @@ export default function LandingPage() {
 								].join(" ")}
 							>
 								<div className="flex items-center gap-6 flex-col lg:flex-row">
-									<div className="p-3 rounded-lg magicpattern w-full sm:w-fit">
+									<div className="p-3 rounded-lg magicpattern w-full sm:w-fit lg:w-fit md:w-fit lg:block sm:block md:block flex justify-center items-center">
 										{feature.illustration}
 									</div>
 									<div className="flex-1">
@@ -325,26 +318,61 @@ export default function LandingPage() {
 				</div>
 			</section>
 
-			<section className="h-screen flex flex-row justify-between items-center border rounded-lg p-4">
-				<div>
-					<h2 className="text-2xl font-bold text-foreground mb-6">
-						Resume Builder ✨
+			<section className="min-h-screen p-6 grid grid-cols-1 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 items-center border rounded-lg gap-6">
+				<div className="grid grid-cols-1 gap-6">
+					<h2 className="text-3xl font-bold text-primary">
+						AI Resume Builder ✨
 					</h2>
-					<Separator />
-					<h3>Just fill in your details once and you are good to go.</h3>
+					<Separator className="max-w-[50%]" />
+					<p className="text-lg text-muted-foreground">
+						Just fill in your details once and you are good to go. Going forward you can generate Resume that is tailored to the Job Description.
+					</p>
+					<Link
+						href={'/resume-builder'}
+						className="border p-4 px-6 hover:bg-primary/90 rounded-lg bg-primary text-primary-foreground font-medium w-fit"
+					>
+						Give it a Try
+					</Link>
 				</div>
 				<DummyResumeBuilder />
 			</section>
 
-			<section className="min-h-screen grid grid-cols-2 items-center border rounded-lg p-4">
-				<div>
-					<h2 className="text-2xl font-bold text-foreground mb-6">
-						Funding News
+			<section className="min-h-screen p-6 grid grid-cols-1 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 items-center border rounded-lg">
+				<div className="grid grid-cols-1 gap-6">
+					<h2 className="text-3xl font-bold text-primary">
+						Stay Informed 📰
 					</h2>
-					<Separator />
-					<h3>Just fill in your details once and you are good to go.</h3>
+					<Separator className="max-w-[50%]" />
+					<p className="text-lg text-muted-foreground">
+						Track the latest funding news and startup opportunities. Get real-time updates about companies actively hiring and expanding their teams.
+					</p>
+					<Link
+						href={'/funding-news'}
+						className="border p-4 px-6 hover:bg-primary/90 rounded-lg bg-primary text-primary-foreground font-medium w-fit"
+					>
+						View Latest News
+					</Link>
 				</div>
 				<DummyFundingTable />
+			</section>
+
+			<section className="min-h-screen p-6 grid grid-cols-1 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 items-center border rounded-lg">
+				<div className="grid grid-cols-1 gap-6">
+					<h2 className="text-3xl font-bold text-primary">
+						Smart Job Tracking 🎯
+					</h2>
+					<Separator className="max-w-[50%]" />
+					<p className="text-lg text-muted-foreground">
+						Effortlessly manage your job applications with our intuitive tracking system. Keep all your applications organized and never miss an opportunity.
+					</p>
+					<Link
+						href={'/job-tracker'}
+						className="border p-4 px-6 hover:bg-primary/90 rounded-lg bg-primary text-primary-foreground font-medium w-fit"
+					>
+						Start Tracking
+					</Link>
+				</div>
+				<DummyJobTracker />
 			</section>
 
 			<section className="py-16 bg-muted/30">
@@ -395,40 +423,6 @@ export default function LandingPage() {
 							</Card>
 						))}
 					</div>
-				</div>
-			</section>
-
-			<section className="py-16 container mx-auto px-4">
-				<h2 className="text-3xl font-bold text-center mb-4">
-					Powerful Features
-				</h2>
-				<p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-					Every tool you need to organize, track, and accelerate your job search
-				</p>
-
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-					{DETAILED_FEATURES.map((feature, index) => (
-						<Card
-							key={index}
-							className={`p-8 hover:shadow-lg transition-all duration-300 ${
-								feature.size === "large" ? "md:col-span-2" : ""
-							}`}
-						>
-							<div className="flex flex-col md:flex-row gap-6 items-center">
-								<IllustrationRenderer
-									illustrationPath={feature.illustrationPath}
-									illustrationAlt={feature.illustrationAlt}
-									//   className="w-32 h-32"
-								/>
-								<div>
-									<h3 className="text-2xl font-semibold mb-2">
-										{feature.title}
-									</h3>
-									<p className="text-muted-foreground">{feature.description}</p>
-								</div>
-							</div>
-						</Card>
-					))}
 				</div>
 			</section>
 

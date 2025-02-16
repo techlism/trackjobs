@@ -154,7 +154,7 @@ export default function DashboardClient({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>
+                <TableHead >
                   <Button
                     variant="ghost"
                     onClick={() => handleSort("company_name")}
