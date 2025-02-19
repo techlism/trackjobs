@@ -169,6 +169,8 @@ export type ApiResponse<T> = {
 	error?: string;
 };
 
+
+
 export interface FundingRound {
 	amount_raised_usd: number | null
 	funding_stage: string
@@ -196,9 +198,12 @@ export interface DashboardData {
 }
 
 export interface FundingFilters {
-    industry?: string
-    search?: string
-    sortBy?: Exclude<keyof Company, 'funding_rounds'> | "latest_raise"
-    sortDirection?: "asc" | "desc"
+	search?: string;
+	industry?: string;
+	series?: string[];
+	minValuation?: number;
+	sortBy?: "company_name" | "latest_raise" | "valuation" | "funding_stage";
+	sortDirection?: "asc" | "desc";
+	limit?: number;
+	offset?: number;
 }
-
