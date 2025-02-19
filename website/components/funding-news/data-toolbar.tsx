@@ -167,11 +167,11 @@ export function DataToolbar({
 				</div>
 			</div>
 
-			{!hasResults && (
+			{/* {!hasResults && (
 				<div className="flex justify-center items-center p-4 bg-muted/50 rounded-lg">
 					<p className="text-muted-foreground">No results found. Try adjusting your filters or enable Global Search.</p>
 				</div>
-			)}
+			)} */}
 
 			<div className="flex flex-col gap-4">
 				{industryFrequency.length > 0 &&

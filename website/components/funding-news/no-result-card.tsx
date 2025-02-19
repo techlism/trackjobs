@@ -1,6 +1,7 @@
 import { XCircle } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
+import IllustrationRenderer from "../landing/IllustrationRenderer";
 
 export default function NoResultsCard({ onReset }: { onReset: () => void }) {
     return (
@@ -8,10 +9,9 @@ export default function NoResultsCard({ onReset }: { onReset: () => void }) {
             <CardContent className="p-6">
                 <div className="text-center space-y-4">
                     <div className="flex justify-center">
-                        <XCircle className="h-12 w-12 text-muted-foreground" />
+                    <IllustrationRenderer illustrationAlt="Not Found" illustrationPath="/not_found.svg"/>
                     </div>
                     <div>
-                        <h2 className="text-lg font-semibold mb-2">No Results Found</h2>
                         <p className="text-muted-foreground mb-4">
                             No companies match your current filter criteria. Try adjusting your filters or perform a new search.
                         </p>
