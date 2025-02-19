@@ -1,11 +1,11 @@
-import { Suspense } from "react"
-import { getFundingData, getIndustries } from "./actions"
-import DashboardClient from "@/components/funding-news/dashboard-client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import type { Company } from "@/lib/types" 
+import { getFundingData } from "./actions";
+import DashboardClient from "@/components/funding-news/dashboard-client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { DashboardData } from "@/lib/types";
 
-type SortableCompanyKeys = Exclude<keyof Company, 'funding_rounds'> | 'latest_raise';
+// Default values for pagination
+const DEFAULT_LIMIT = 10;
 
 function LoadingState() {
   return (
@@ -23,8 +23,11 @@ function LoadingState() {
         <CardContent className="p-6">
           <div className="space-y-4">
             {Array.from({ length: 5 }).map((_, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: Good Enough to be here.
-              <div key={`skeleton_${i}`} className="flex items-center space-x-4">
+              <div 
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                key={`funding_skeleton_${i}`} 
+                className="flex items-center space-x-4"
+              >
                 <Skeleton className="h-12 w-[200px]" />
                 <Skeleton className="h-12 w-[100px]" />
                 <Skeleton className="h-12 w-[150px]" />
@@ -35,10 +38,8 @@ function LoadingState() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
-
-
 
 async function DashboardContent({
   page,
@@ -46,24 +47,52 @@ async function DashboardContent({
   search,
   sortBy,
   sortDirection,
+  stages,
+  minValuation,
+  limit = DEFAULT_LIMIT,
 }: {
-  page: number
-  industry?: string
-  search?: string
-  sortBy?: string
-  sortDirection?: "asc" | "desc"
+  page: number;
+  industry?: string;
+  search?: string;
+  sortBy?: "company_name" | "latest_raise" | "valuation" | "funding_stage";
+  sortDirection?: "asc" | "desc";
+  stages?: string;
+  minValuation?: string;
+  limit?: number;
 }) {
-  const [fundingData, industries] = await Promise.all([
-    getFundingData(page, {
+  try {
+    const offset = (page - 1) * limit;
+    
+    const fundingData = await getFundingData({
       industry,
       search,
-      sortBy: sortBy as SortableCompanyKeys,
+      sortBy,
       sortDirection,
-    }),
-    getIndustries(),
-  ])
+      series: stages?.split(','),
+      minValuation: minValuation ? Number(minValuation) : undefined,
+      limit,
+      offset,
+    });
 
-  if (!fundingData.batchDate) {
+    // Check if we have data (commenting this part)
+    // if (!fundingData.data.length) {
+    //   return (
+    //     <Card>
+    //       <CardContent className="p-6">
+    //         <div className="text-center">
+    //           <h2 className="text-lg font-semibold">No Results Found</h2>
+    //           <p className="text-muted-foreground">
+    //             Try adjusting your filters to see more results.
+    //           </p>
+    //         </div>
+    //       </CardContent>
+    //     </Card>
+    //   );
+    // }
+
+    return <DashboardClient {...fundingData} />;
+  } catch (error) {
+    console.error("Error loading dashboard data:", error);
     return (
       <Card>
         <CardContent className="p-6">
@@ -75,38 +104,48 @@ async function DashboardContent({
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
-
-  return <DashboardClient {...fundingData} industries={industries} />
 }
 
-
 export default async function DashboardPage({
-  params,
+  searchParams,
 }: {
-  params: Promise<{
-    page?: string
-    industry?: string
-    search?: string
-    sortBy?: string
-    sortDirection?: "asc" | "desc"
-  }>
+  searchParams: Promise<{
+    page?: string;
+    industry?: string;
+    search?: string;
+    sortBy?: "company_name" | "latest_raise" | "valuation" | "funding_stage";
+    sortDirection?: "asc" | "desc";
+    stages?: string;
+    minValuation?: string;
+    limit?: string;
+  }>;
 }) {
-  const searchParams = await params;
-  const page = searchParams.page ? Number.parseInt(searchParams.page) : 1
+  const params = await searchParams;
+
+  // Parse and validate parameters
+  const page = params.page ? Math.max(1, Number.parseInt(params.page)) : 1;
+  const limit = params.limit ? Math.max(1, Number.parseInt(params.limit)) : DEFAULT_LIMIT;
+
+  // Validate sortBy to ensure it matches our allowed values
+  const validSortByValues = ["company_name", "latest_raise", "valuation", "funding_stage"] as const;
+  const sortBy = params.sortBy && validSortByValues.includes(params.sortBy)
+    ? params.sortBy
+    : undefined;
 
   return (
     <main className="container mx-auto my-6">
-      <Suspense fallback={<LoadingState />}>
-        <DashboardContent
-          page={page}
-          industry={searchParams.industry}
-          search={searchParams.search}
-          sortBy={searchParams.sortBy}
-          sortDirection={searchParams.sortDirection}
-        />
-      </Suspense>
+      <DashboardContent
+        page={page}
+        limit={limit}
+        industry={params.industry}
+        search={params.search}
+        sortBy={sortBy}
+        sortDirection={params.sortDirection}
+        stages={params.stages}
+        minValuation={params.minValuation}
+      />
     </main>
-  )
+  );
 }
