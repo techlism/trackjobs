@@ -17,6 +17,8 @@ import DummyKanbanHomePage from "./DummyKanbanHomePage";
 import DummyResumeBuilder from "./DummyResumeBuilder";
 import IllustrationRenderer from "./IllustrationRenderer";
 import Link from "next/link";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import VideoEmbed from "./VideoEmbed";
 
 const FEATURES = [
 	{
@@ -80,83 +82,43 @@ const FEATURES = [
 	},
 ];
 
-const TESTIMONIALS = [
+type testimonial = {
+	name: string;
+	role: string;
+	quote: string;
+	avatarURL?: string;
+}
+
+const TESTIMONIALS: testimonial[] = [
 	{
-		name: "Sarah Chen",
-		role: "Software Engineer at Meta",
-		image: "/placeholder.svg?height=100&width=100",
-		quote:
-			"TrackJobs' AI resume builder helped me land interviews at 5 FAANG companies. The tailored suggestions for each application were game-changing.",
+		name: "Rajkumar Verma",
+		role: "Co-Founder and CEO of SHER DeepAI Research",
+		quote: "TrackJob's Funding Dashboard is a game-changer for founders and investors. It offers weekly insights into the startup ecosystem, tracking funding rounds from pre-seed to later stages. It helps identify key investors and highlights which industries are attracting the most funds, making it easy to spot market trends."
 	},
 	{
-		name: "Marcus Rodriguez",
-		role: "Product Manager at Stripe",
-		image: "/placeholder.svg?height=100&width=100",
-		quote:
-			"The startup tracking feature helped me identify and join a unicorn startup at the perfect time. Now I'm part of one of the fastest-growing teams in fintech.",
+		name: "Sourabh Sinha",
+		role: "Senior Software Engineer at Velotio Technologies",
+		quote: "The funding news Dashboard is quite nice and it offers a lot of news and trends at a glance. The resume builder is quite good too as it allows to have custom fields."
 	},
 	{
-		name: "Emily Watson",
-		role: "UX Designer at Airbnb",
-		image: "/placeholder.svg?height=100&width=100",
+		name: "Kajal Kumari",
+		role: "UI Designer at TopKlickz",
 		quote:
 			"The Chrome extension makes job hunting so much more efficient. I can organize my applications without switching between tabs.",
 	},
 ];
 
-const DETAILED_FEATURES = [
-	{
-		illustrationPath: "/career.svg",
-		illustrationAlt: "Kanban board visualization",
-		title: "Visual Job Search Pipeline",
-		description:
-			"Transform your job search into a visual journey with our intuitive Kanban board. Drag-and-drop applications between customizable stages, from 'Applied' to 'Offer Received'.",
-		size: "medium",
-	},
-	{
-		illustrationPath: "/datacloud.svg",
-		illustrationAlt: "Cross-device synchronization",
-		title: "Seamless Multi-Device Experience",
-		description:
-			"Your job search follows you everywhere. Real-time sync across all devices ensures you never miss an update or opportunity, whether you're on desktop, tablet, or mobile.",
-		size: "medium",
-	},
-	{
-		illustrationPath: "/sync.svg",
-		illustrationAlt: "Application tracking system",
-		title: "Comprehensive Application Tracking",
-		description:
-			"Monitor every aspect of your applications with military-grade precision. Track status changes, interview schedules, and follow-ups all in one place.",
-		size: "large",
-	},
-	{
-		illustrationPath: "/stage.svg",
-		illustrationAlt: "Custom pipeline stages",
-		title: "Flexible Pipeline Management",
-		description:
-			"Create and customize your job search stages to match your unique strategy. From initial research to salary negotiation, stay organized at every step.",
-		size: "medium",
-	},
-	{
-		illustrationPath: "/ai.svg",
-		illustrationAlt: "AI-powered insights",
-		title: "AI-Powered Job Analysis",
-		description:
-			"Let our AI digest job descriptions and provide actionable insights. Understand key requirements, identify matching skills, and craft targeted applications with confidence.",
-		size: "large",
-	},
-];
 
 const FAQs = [
 	{
 		question: "How does the AI resume builder improve my chances?",
 		answer:
-			"Our AI analyzes job descriptions to identify key requirements and suggests optimal content, formatting, and keywords to help your resume pass ATS systems and catch recruiters' attention.",
+			"Our AI analyzes job descriptions to identify key requirements and suggests optimal content and keywords to help your resume pass ATS systems and catch recruiters' attention.",
 	},
 	{
 		question: "How accurate is your startup funding data?",
 		answer:
-			"We aggregate real-time data from multiple verified sources including Crunchbase, SEC filings, and official press releases to ensure you get the most accurate and timely information.",
+			"The funding data is sourced from the various websites such as Tracxn, Crunchbase, Inc42 etc. However, there might be some discrepancies here and there, please reach out, if you find one.",
 	},
 	{
 		question: "Can I use the Chrome extension with any job board?",
@@ -194,36 +156,52 @@ export default function LandingPage() {
 	let currentRow = 0;
 	return (
 		<div className="grid grid-cols-1 gap-12">
-			<section className="w-full flex flex-col items-center justify-center mt-10 p-2 py-10 rounded-lg hero-bg dark:border dark:border-border relative">
-				<motion.div
+			<section className="w-full flex flex-col items-center justify-center mt-10 p-2 py-10 rounded-lg magicpattern dark:border dark:border-border relative">
+				{/* <motion.div
 					initial={{ opacity: 0, y: -10 }}
 					animate={{ opacity: 1, y: 0 }}
 					className="text-sm font-semibold text-primary mb-4"
 				>
 					Your Job Search, Supercharged with AI
-				</motion.div>
+				</motion.div> */}
+		  <div className="absolute inset-0 backdrop-blur-sm bg-white/5 dark:bg-black/20 z-0" />
 
-				<motion.h1 className="text-4xl md:text-6xl font-bold text-center mb-6 max-w-4xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
+		  <div className="relative z-10 flex flex-col items-center justify-center w-full">
+
+					
+				<motion.h1 className="landing-page-font text-4xl md:text-5xl lg:text-7xl dark:text-[#f0f8ff] text-[#000032] text-center mb-6 mt-6 max-w-4xl">
 					Turn Your Job Search into a Success Story
 				</motion.h1>
 
-				<motion.p className="text-xl text-muted-foreground max-w-2xl text-center mb-8">
-					Join thousands of professionals using AI-powered tools to land their
-					dream jobs faster
+				<motion.p className="text-xl text-primary/70 font-medium max-w-2xl text-center mb-8">
+				Your Job Search, Supercharged with AI
 				</motion.p>
 
 				<div className="flex lg:flex-row md:flex-row sm:flex-row flex-col gap-4">
-					<Button size="lg" className="gap-2">
-						Start Free Trial <ChevronRight className="w-4 h-4" />
+					<Button size="lg" className="gap-2  text-lg">
+						Elevate Your Job Hunt <ChevronRight className="w-4 h-4" />
 					</Button>
-					<Button variant="outline" size="lg">
-						Watch Demo
-					</Button>
+					<Dialog>
+						<DialogTrigger asChild>
+							<Button variant="outline" size="lg" className="text-lg">
+								Watch Demo
+							</Button>
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Watch Demo</DialogTitle>
+							</DialogHeader>
+
+							<VideoEmbed />
+
+						</DialogContent>
+					</Dialog>
 				</div>
 
 				<motion.div className="mt-10 lg:w-full md:w-[90%] max-w-3xl mx-auto">
 					<DummyKanbanHomePage />
 				</motion.div>
+				</div>
 			</section>
 
 			<section className="w-full">
@@ -375,7 +353,7 @@ export default function LandingPage() {
 				<DummyJobTracker />
 			</section>
 
-			<section className="py-16 bg-muted/30">
+			<section className="py-16 bg-muted/50 rounded-lg">
 				<div className="container mx-auto px-4">
 					<h2 className="text-3xl font-bold text-center mb-4">
 						Success Stories
@@ -385,13 +363,14 @@ export default function LandingPage() {
 						with TrackJobs
 					</p>
 
-					<div className="grid md:grid-cols-3 gap-8">
+					<div className="grid md:grid-cols-3 gap-8 ">
 						{TESTIMONIALS.map((testimonial, index) => (
-							<Card key={index} className="p-6">
+							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+							<Card key={`${index}_testimonial`} className="p-6">
 								<div className="flex items-start gap-4 mb-4">
 									<Avatar className="w-12 h-12">
 										<AvatarImage
-											src={testimonial.image}
+											src={testimonial?.avatarURL}
 											alt={testimonial.name}
 										/>
 										<AvatarFallback>
@@ -409,12 +388,13 @@ export default function LandingPage() {
 									</div>
 								</div>
 								<div className="space-y-2">
-									<Quote className="w-8 h-8 text-primary/20" />
+									<Quote className="w-8 h-8 text-primary/30" />
 									<p className="text-muted-foreground">{testimonial.quote}</p>
 									<div className="flex gap-1">
 										{[...Array(5)].map((_, i) => (
 											<Star
-												key={i}
+												// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+												key={`${i}th_star_of_${index}th_testimonial`}
 												className="w-4 h-4 fill-primary text-primary"
 											/>
 										))}
@@ -426,7 +406,7 @@ export default function LandingPage() {
 				</div>
 			</section>
 
-			<section className="py-16 bg-muted/30">
+			<section className="py-16 bg-muted/50 rounded-lg">
 				<div className="container mx-auto px-4 max-w-3xl">
 					<h2 className="text-3xl font-bold text-center mb-4">
 						Frequently Asked Questions
@@ -438,7 +418,8 @@ export default function LandingPage() {
 					<Accordion type="single" collapsible className="space-y-4">
 						{FAQs.map((faq, index) => (
 							<AccordionItem
-								key={index}
+								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+								key={`${index}th_faq_landing_page`}
 								value={`faq-${index}`}
 								className="border rounded-lg bg-card"
 							>
@@ -455,23 +436,6 @@ export default function LandingPage() {
 					</Accordion>
 				</div>
 			</section>
-
-			{/* <section className="py-24 bg-gradient-to-b from-background to-primary/5">
-				<div className="container mx-auto px-4 text-center">
-					<h2 className="text-4xl font-bold mb-6">Ready to Transform Your Job Search?</h2>
-					<p className="text-xl text-muted-foreground mb-8 max-w-xl mx-auto">
-						Join thousands of successful professionals who've already landed their dream jobs with TrackJobs
-					</p>
-					<div className="flex gap-4 justify-center">
-						<Button size="lg" className="gap-2">
-							Start Free Trial <ChevronRight className="w-4 h-4" />
-						</Button>
-						<Button variant="outline" size="lg">
-							Schedule Demo
-						</Button>
-					</div>
-				</div>
-			</section> */}
 		</div>
 	);
 }

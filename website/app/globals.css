@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @layer base {
 	:root {
 		/* Base colors */
@@ -116,33 +117,14 @@ html body[data-scroll-locked]:not([data-scroll-no-lock]) {
 	overflow: inherit !important;
 }
 
-.hero-bg {
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' viewBox='0 0 800 450' opacity='1'%3E%3Cdefs%3E%3Cfilter id='bbblurry-filter' x='-100%25' y='-100%25' width='400%25' height='400%25' filterUnits='objectBoundingBox' primitiveUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='97' x='0%25' y='0%25' width='100%25' height='100%25' in='SourceGraphic' edgeMode='none' result='blur'%3E%3C/feGaussianBlur%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23bbblurry-filter)'%3E%3Cellipse rx='264.5' ry='266.5' cx='863.4122591885653' cy='-50.46518221768463' fill='hsla(255, 96%25, 51%25, 1.00)'%3E%3C/ellipse%3E%3Cellipse rx='264.5' ry='266.5' cx='533.053749778054' cy='510.2560535777699' fill='%23fde3f4ff'%3E%3C/ellipse%3E%3Cellipse rx='264.5' ry='266.5' cx='68.55986855246806' cy='232.3382568359375' fill='%23fdf2ecff'%3E%3C/ellipse%3E%3C/g%3E%3C/svg%3E") !important;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
+.landing-page-font{
+	@import url('https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap');
+	font-family: "Alegreya",serif;
+	font-optical-sizing: auto;
+	font-weight: 800 ;
 }
 
-.dark .hero-bg {
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' viewBox='0 0 800 450' opacity='1'%3E%3Cdefs%3E%3Cfilter id='bbblurry-filter' x='-100%25' y='-100%25' width='400%25' height='400%25' filterUnits='objectBoundingBox' primitiveUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='97' x='0%25' y='0%25' width='100%25' height='100%25' in='SourceGraphic' edgeMode='none' result='blur'%3E%3C/feGaussianBlur%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23bbblurry-filter)'%3E%3Cellipse rx='264.5' ry='266.5' cx='863.4122591885653' cy='-50.46518221768463' fill='hsla(255, 96%25, 58%25, 1.00)'%3E%3C/ellipse%3E%3Cellipse rx='264.5' ry='266.5' cx='533.053749778054' cy='510.2560535777699' fill='hsl(240, 10%, 4.5%)'%3E%3C/ellipse%3E%3Cellipse rx='264.5' ry='266.5' cx='68.55986855246806' cy='232.3382568359375' fill='hsl(240, 10%, 4.5%)'%3E%3C/ellipse%3E%3C/g%3E%3C/svg%3E") !important;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-}
 
-.glow-effect-background {
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' viewBox='0 0 800 450' opacity='1'%3E%3Cdefs%3E%3Cfilter id='bbblurry-filter' x='-100%25' y='-100%25' width='400%25' height='400%25' filterUnits='objectBoundingBox' primitiveUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='97' x='0%25' y='0%25' width='100%25' height='100%25' in='SourceGraphic' edgeMode='none' result='blur'%3E%3C/feGaussianBlur%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23bbblurry-filter)'%3E%3Cellipse rx='264.5' ry='266.5' cx='863.4122591885653' cy='-50.46518221768463' fill='hsla(255, 96%25, 51%25, 1.00)'%3E%3C/ellipse%3E%3Cellipse rx='264.5' ry='266.5' cx='533.053749778054' cy='510.2560535777699' fill='%23fde3f4ff'%3E%3C/ellipse%3E%3Cellipse rx='264.5' ry='266.5' cx='68.55986855246806' cy='232.3382568359375' fill='%23fdf2ecff'%3E%3C/ellipse%3E%3C/g%3E%3C/svg%3E") !important;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-}
-
-.dark .glow-effect-background {
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' viewBox='0 0 800 450' opacity='1'%3E%3Cdefs%3E%3Cfilter id='bbblurry-filter' x='-100%25' y='-100%25' width='400%25' height='400%25' filterUnits='objectBoundingBox' primitiveUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur stdDeviation='97' x='0%25' y='0%25' width='100%25' height='100%25' in='SourceGraphic' edgeMode='none' result='blur'%3E%3C/feGaussianBlur%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23bbblurry-filter)'%3E%3Cellipse rx='264.5' ry='266.5' cx='863.4122591885653' cy='-50.46518221768463' fill='hsla(255, 96%25, 58%25, 1.00)'%3E%3C/ellipse%3E%3Cellipse rx='264.5' ry='266.5' cx='533.053749778054' cy='510.2560535777699' fill='hsl(240, 10%, 4.5%)'%3E%3C/ellipse%3E%3Cellipse rx='264.5' ry='266.5' cx='68.55986855246806' cy='232.3382568359375' fill='hsl(240, 10%, 4.5%)'%3E%3C/ellipse%3E%3C/g%3E%3C/svg%3E") !important;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-}
 
 .dark .magicpattern {
 	background-size: cover;

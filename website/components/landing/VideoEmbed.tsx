@@ -12,7 +12,7 @@ const VideoEmbed: React.FC = () => {
     : `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 
   return (
-    <div className="relative w-full md:w-1/2 aspect-video rounded-lg overflow-hidden">
+    <div className="relative w-full  aspect-video rounded-lg overflow-hidden">
       {!isLoaded ? (
         <button 
           type="button"
