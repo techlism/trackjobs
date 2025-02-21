@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
 	title: "TrackJobs",
@@ -53,6 +54,7 @@ export default function RootLayout({
 					<Toaster />
 					<Footer className="flex-shrink-0" />
 				</ThemeProvider>
+				<Analytics/>
 			</body>
 		</html>
 	);
